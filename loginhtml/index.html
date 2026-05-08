@@ -1,0 +1,733 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Despensa Inteligente</title>
+    <!-- Tailwind CSS para estilos rápidos y modernos -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome para los íconos -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts (Inter) -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/login.css">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        brand: {
+                            green: '#4ade80',    // Verde suave
+                            greenDark: '#16a34a',
+                            greenLight: '#dcfce7',
+                            blue: '#bae6fd',     // Azul claro
+                            blueLight: '#f0f9ff',
+                            dark: '#1e293b',
+                            gray: '#64748b'
+                        }
+                    },
+                    boxShadow: {
+                        'soft': '0 10px 40px -10px rgba(74, 222, 128, 0.2)',
+                    }
+                }
+            }
+        }
+    </script>
+    
+</head>
+<body>
+
+    <main id="app-container">
+
+        <!-- ============================================== -->
+        <!-- PANTALLA: LOGIN (HU-01) -->
+        <!-- ============================================== -->
+        <div id="screen-login" class="screen active overflow-y-auto no-scrollbar p-6">
+            <div class="flex-1 flex flex-col justify-center">
+                <!-- Logo -->
+                <div class="flex flex-col items-center mb-10">
+                    <div class="w-16 h-16 md:w-20 md:h-20 bg-brand-greenLight rounded-2xl flex items-center justify-center text-brand-greenDark text-2xl md:text-3xl mb-4 shadow-soft">
+                        <i class="fa-solid fa-cart-shopping"></i>
+                    </div>
+                    <h1 class="text-xl md:text-2xl font-bold text-center bg-gradient-to-r from-brand-green to-brand-blue bg-clip-text text-transparent">Bienvenido a tu Despensa Inteligente</h1>
+                    <p class="text-brand-gray text-sm mt-1">Inicia sesión en tu cuenta</p>
+                </div>
+
+                <form id="login-form" class="space-y-4" onsubmit="handleLogin(event)">
+                    <!-- Correo -->
+                    <div>
+                        <label class="block text-xs font-semibold text-brand-gray mb-1 ml-1 uppercase tracking-wider">Correo Electrónico / Usuario</label>
+                        <div class="input-group">
+                            <input type="text" id="login-email" class="input-field" placeholder="ana@correo.com" required>
+                            <i class="fa-solid fa-envelope icon-left"></i>
+                        </div>
+                        <p id="login-error" class="error-msg">Credenciales incorrectas.</p>
+                    </div>
+
+                    <!-- Contraseña -->
+                    <div>
+                        <label class="block text-xs font-semibold text-brand-gray mb-1 ml-1 uppercase tracking-wider">Contraseña</label>
+                        <div class="input-group relative">
+                            <input type="password" id="login-password" class="input-field pr-10" placeholder="••••••••" required>
+                            <i class="fa-solid fa-lock icon-left"></i>
+                            <button type="button" onclick="togglePassword('login-password', 'login-eye')" class="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600">
+                                <i id="login-eye" class="fa-regular fa-eye"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Olvidaste contraseña -->
+                    <div class="flex justify-end mb-6">
+                        <a href="#" class="text-sm font-medium text-brand-greenDark hover:underline">¿Olvidaste tu contraseña?</a>
+                    </div>
+
+                    <!-- Botón -->
+                    <button type="submit" class="w-full bg-brand-green hover:bg-brand-greenDark text-white font-semibold py-3.5 rounded-xl shadow-soft transition-all transform active:scale-95">
+                        Iniciar sesión
+                    </button>
+                </form>
+
+                <!-- Separador -->
+                <div class="flex items-center my-8">
+                    <div class="flex-1 border-t border-gray-200"></div>
+                    <span class="px-4 text-xs text-gray-400 font-medium uppercase">o continúa con</span>
+                    <div class="flex-1 border-t border-gray-200"></div>
+                </div>
+
+                <!-- Social Login -->
+                <div class="grid grid-cols-2 gap-4">
+                    <button type="button" class="flex items-center justify-center py-2.5 border border-gray-200 rounded-xl hover:bg-gray-50 transition-colors">
+                        <img src="https://cdn-icons-png.flaticon.com/512/2991/2991148.png" alt="Google" class="w-5 h-5 mr-2">
+                        <span class="text-sm font-medium text-brand-dark">Google</span>
+                    </button>
+                    <button type="button" class="flex items-center justify-center py-2.5 border border-gray-200 rounded-xl hover:bg-gray-50 transition-colors">
+                        <i class="fa-brands fa-apple text-xl mr-2"></i>
+                        <span class="text-sm font-medium text-brand-dark">Apple</span>
+                    </button>
+                </div>
+
+                <!-- Enlace a registro -->
+                <div class="mt-10 text-center">
+                    <p class="text-sm text-brand-gray">¿No tienes cuenta? <a href="#" onclick="navTo('screen-register')" class="font-bold text-brand-greenDark hover:underline">Regístrate</a></p>
+                </div>
+            </div>
+        </div>
+
+        <!-- ============================================== -->
+        <!-- PANTALLA: REGISTRO (Paso 1 - Cuenta) -->
+        <!-- ============================================== -->
+        <div id="screen-register" class="screen overflow-y-auto no-scrollbar p-6">
+            <button onclick="navTo('screen-login')" class="absolute top-6 left-6 text-brand-gray hover:text-brand-dark">
+                <i class="fa-solid fa-arrow-left text-xl"></i>
+            </button>
+
+            <div class="mt-8 mb-6">
+                <h1 class="text-2xl font-bold text-brand-dark">Crear cuenta</h1>
+                <p class="text-brand-gray text-sm mt-1">Únete a Despensa Inteligente</p>
+            </div>
+
+            <form id="register-form" class="space-y-4" onsubmit="handleRegisterStep1(event)">
+                <!-- Nombre -->
+                <div>
+                    <label class="block text-xs font-semibold text-brand-gray mb-1 ml-1 uppercase tracking-wider">Nombre Completo</label>
+                    <div class="input-group">
+                        <input type="text" id="reg-name" class="input-field" placeholder="Ana García" required>
+                        <i class="fa-regular fa-user icon-left"></i>
+                    </div>
+                </div>
+
+                <!-- Correo -->
+                <div>
+                    <label class="block text-xs font-semibold text-brand-gray mb-1 ml-1 uppercase tracking-wider">Correo Electrónico</label>
+                    <div class="input-group">
+                        <input type="email" id="reg-email" class="input-field" placeholder="ana@correo.com" required oninput="validateEmailUnique()">
+                        <i class="fa-solid fa-envelope icon-left"></i>
+                    </div>
+                    <p id="error-email" class="error-msg">Este correo ya está registrado.</p>
+                </div>
+
+                <!-- Usuario -->
+                <div>
+                    <label class="block text-xs font-semibold text-brand-gray mb-1 ml-1 uppercase tracking-wider">Usuario</label>
+                    <div class="input-group">
+                        <input type="text" id="reg-user" class="input-field" placeholder="@ana_garcia" required oninput="validateUserUnique()">
+                        <i class="fa-solid fa-at icon-left"></i>
+                    </div>
+                    <p id="error-user" class="error-msg">Usuario no disponible.</p>
+                </div>
+
+                <!-- Contraseña -->
+                <div>
+                    <label class="block text-xs font-semibold text-brand-gray mb-1 ml-1 uppercase tracking-wider">Contraseña</label>
+                    <div class="input-group relative mb-1">
+                        <input type="password" id="reg-password" class="input-field pr-10" placeholder="••••••••" required oninput="checkPasswordStrength()">
+                        <i class="fa-solid fa-lock icon-left"></i>
+                        <button type="button" onclick="togglePassword('reg-password', 'reg-eye1')" class="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400">
+                            <i id="reg-eye1" class="fa-regular fa-eye"></i>
+                        </button>
+                    </div>
+                    <!-- Medidor de fuerza -->
+                    <div class="flex gap-1 mt-2 mb-2 px-1">
+                        <div id="str-1" class="strength-bar"></div>
+                        <div id="str-2" class="strength-bar"></div>
+                        <div id="str-3" class="strength-bar"></div>
+                        <div id="str-4" class="strength-bar"></div>
+                    </div>
+                    <p class="text-[0.65rem] text-gray-400 ml-1">Mín. 8 caracteres, 1 mayúscula, 1 número, 1 símbolo.</p>
+                </div>
+
+                <!-- Confirmar Contraseña -->
+                <div>
+                    <label class="block text-xs font-semibold text-brand-gray mb-1 ml-1 uppercase tracking-wider">Confirmar Contraseña</label>
+                    <div class="input-group relative">
+                        <input type="password" id="reg-password-confirm" class="input-field pr-10" placeholder="••••••••" required oninput="checkPasswordMatch()">
+                        <i class="fa-solid fa-lock icon-left"></i>
+                        <button type="button" onclick="togglePassword('reg-password-confirm', 'reg-eye2')" class="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400">
+                            <i id="reg-eye2" class="fa-regular fa-eye"></i>
+                        </button>
+                    </div>
+                    <p id="error-password-match" class="error-msg">Las contraseñas no coinciden.</p>
+                </div>
+
+                <!-- Términos -->
+                <div class="flex items-center mt-2 mb-6">
+                    <input type="checkbox" id="terms" required class="w-4 h-4 text-brand-green bg-gray-100 border-gray-300 rounded focus:ring-brand-green focus:ring-2 accent-brand-green">
+                    <label for="terms" class="ml-2 text-sm text-brand-gray">Acepto los <a href="#" class="text-brand-greenDark font-medium hover:underline">Términos y Privacidad</a></label>
+                </div>
+
+                <!-- Botón -->
+                <button type="submit" id="btn-next-1" class="w-full bg-brand-green hover:bg-brand-greenDark text-white font-semibold py-3.5 rounded-xl shadow-soft transition-all transform active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed">
+                    Continuar <i class="fa-solid fa-arrow-right ml-2"></i>
+                </button>
+                
+                <div class="mt-6 text-center pb-6">
+                    <p class="text-sm text-brand-gray">¿Ya tienes cuenta? <a href="#" onclick="navTo('screen-login')" class="font-bold text-brand-greenDark hover:underline">Inicia sesión</a></p>
+                </div>
+            </form>
+        </div>
+
+        <!-- ============================================== -->
+        <!-- PANTALLA: ONBOARDING (Paso 2 - Físico y Salud) -->
+        <!-- ============================================== -->
+        <div id="screen-onboarding" class="screen overflow-y-auto no-scrollbar p-6 bg-brand-blueLight">
+            <button onclick="navTo('screen-register')" class="absolute top-6 left-6 text-brand-gray hover:text-brand-dark">
+                <i class="fa-solid fa-arrow-left text-xl"></i>
+            </button>
+
+            <!-- Barra de progreso -->
+            <div class="flex gap-2 justify-center mt-2 mb-8 px-8">
+                <div class="h-1.5 flex-1 bg-brand-green rounded-full"></div>
+                <div class="h-1.5 flex-1 bg-brand-green rounded-full"></div>
+            </div>
+
+            <div class="mb-6 text-center">
+                <div class="w-16 h-16 bg-white rounded-full flex items-center justify-center text-brand-green text-2xl mx-auto mb-3 shadow-sm">
+                    <i class="fa-solid fa-heart-pulse"></i>
+                </div>
+                <h1 class="text-2xl font-bold text-brand-dark">Tu perfil de salud</h1>
+                <p class="text-brand-gray text-sm mt-1">Personalicemos tu experiencia</p>
+            </div>
+
+            <form id="onboarding-form" class="space-y-6 bg-white p-5 rounded-3xl shadow-sm border border-gray-100" onsubmit="handleRegisterComplete(event)">
+                
+                <!-- Datos Personales: Fecha Nac. y Sexo -->
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-xs font-semibold text-brand-gray mb-1 uppercase tracking-wider">Fecha de Nac.</label>
+                        <input type="date" id="ob-date" class="input-field !pl-4 text-sm" required>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-brand-gray mb-1 uppercase tracking-wider">Género</label>
+                        <select id="ob-gender" class="input-field !pl-4 text-sm bg-white appearance-none" required>
+                            <option value="">Selecciona</option>
+                            <option value="F">Femenino</option>
+                            <option value="M">Masculino</option>
+                            <option value="O">Otro</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Datos Físicos: Peso, Altura y IMC -->
+                <div>
+                    <label class="block text-xs font-semibold text-brand-gray mb-2 uppercase tracking-wider">Datos Físicos</label>
+                    <div class="grid grid-cols-2 gap-4 mb-3">
+                        <div class="relative">
+                            <input type="number" id="ob-weight" step="0.1" class="input-field !pl-4 pr-10 text-sm" placeholder="Peso" required oninput="calculateIMC()">
+                            <span class="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 text-sm">kg</span>
+                        </div>
+                        <div class="relative">
+                            <input type="number" id="ob-height" step="0.01" class="input-field !pl-4 pr-10 text-sm" placeholder="Altura" required oninput="calculateIMC()">
+                            <span class="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 text-sm">m</span>
+                        </div>
+                    </div>
+                    <!-- Tarjeta de IMC -->
+                    <div class="bg-brand-greenLight rounded-xl p-3 flex items-center justify-between border border-brand-green/20">
+                        <div class="flex items-center text-brand-greenDark font-medium">
+                            <i class="fa-solid fa-calculator mr-2"></i> IMC Calculado
+                        </div>
+                        <div class="text-xl font-bold text-brand-greenDark" id="imc-value">--</div>
+                    </div>
+                </div>
+
+                <!-- Condición de Salud -->
+                <div>
+                    <label class="block text-xs font-semibold text-brand-gray mb-2 uppercase tracking-wider">¿Condición de salud actual?</label>
+                    <div class="flex flex-wrap" id="chips-condition">
+                        <div class="chip" onclick="toggleChip(this, true)">Diabetes</div>
+                        <div class="chip" onclick="toggleChip(this, true)">Hipertensión</div>
+                        <div class="chip" onclick="toggleChip(this, true)">Obesidad</div>
+                        <div class="chip" onclick="toggleChip(this, true)">Colesterol alto</div>
+                        <div class="chip" onclick="toggleChip(this, true)">Acné General</div>
+                        <div class="chip active" onclick="toggleChip(this, true)">Ninguna</div>
+                        <div class="chip" onclick="toggleChip(this, true)">Otra</div>
+                    </div>
+                </div>
+
+                <!-- Objetivos -->
+                <div>
+                    <label class="block text-xs font-semibold text-brand-gray mb-2 uppercase tracking-wider">¿En qué deseas mejorar?</label>
+                    <div class="flex flex-wrap" id="chips-goals">
+                        <div class="chip" onclick="toggleChip(this, false)">Menos azúcar</div>
+                        <div class="chip" onclick="toggleChip(this, false)">Menos grasa</div>
+                        <div class="chip" onclick="toggleChip(this, false)">Mejorar estado de ánimo</div>
+                        <div class="chip" onclick="toggleChip(this, false)">Reducir estrés</div>
+                        <div class="chip" onclick="toggleChip(this, false)">Aumentar musculatura</div>
+                        <div class="chip" onclick="toggleChip(this, false)">Bajar de peso</div>
+                        <div class="chip" onclick="toggleChip(this, false)">Mejorar energía</div>
+                        <div class="chip active" onclick="toggleChip(this, false)">Comer más saludable</div>
+                    </div>
+                </div>
+
+                <!-- Botón Finalizar -->
+                <button type="submit" class="w-full mt-4 bg-brand-green hover:bg-brand-greenDark text-white font-semibold py-3.5 rounded-xl shadow-soft transition-all transform active:scale-95">
+                    Crear cuenta
+                </button>
+            </form>
+            <div class="h-10"></div> <!-- Espaciador -->
+        </div>
+
+
+        <!-- ============================================== -->
+        <!-- PANTALLA: HOME (HU-02, HU-09) -->
+        <!-- ============================================== -->
+        <div id="screen-home" class="screen bg-gray-50 flex flex-col">
+            
+            <!-- Header App -->
+            <div class="px-6 pt-8 pb-4 bg-white rounded-b-3xl shadow-sm z-10">
+                <div class="flex justify-between items-center mb-6">
+                    <div>
+                        <p class="text-sm text-brand-gray">Buenos días,</p>
+                        <h2 class="text-2xl font-bold text-brand-dark" id="home-username">Ana García</h2>
+                    </div>
+                    <div class="w-12 h-12 bg-brand-blueLight rounded-full flex items-center justify-center text-brand-blue border-2 border-white shadow-sm overflow-hidden">
+                        <img src="https://ui-avatars.com/api/?name=Ana+Garcia&background=bae6fd&color=1e293b" id="home-avatar" alt="Perfil" class="w-full h-full object-cover">
+                    </div>
+                </div>
+
+                <!-- Barra de búsqueda -->
+                <div class="relative">
+                    <input type="text" class="w-full bg-gray-100 text-brand-dark rounded-2xl py-3.5 pl-12 pr-4 outline-none focus:ring-2 focus:ring-brand-green/50 transition-all font-medium" placeholder="Buscar alimentos...">
+                    <i class="fa-solid fa-magnifying-glass absolute left-4 top-1/2 transform -translate-y-1/2 text-brand-gray text-lg"></i>
+                    <div class="absolute right-2 top-1/2 transform -translate-y-1/2 w-8 h-8 bg-white rounded-xl flex items-center justify-center shadow-sm cursor-pointer text-brand-green">
+                        <i class="fa-solid fa-sliders"></i>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Contenido Scrolleable -->
+            <div class="flex-1 overflow-y-auto no-scrollbar p-6 pb-24">
+                
+                <!-- Recomendados (Carrusel Horizontal) -->
+                <div class="mb-8">
+                    <div class="flex justify-between items-end mb-4">
+                        <h3 class="text-lg font-bold text-brand-dark">Recomendado para ti</h3>
+                        <a href="#" class="text-xs font-semibold text-brand-greenDark hover:underline">Ver más</a>
+                    </div>
+                    
+                    <div class="flex space-x-4 overflow-x-auto no-scrollbar pb-2 -mx-6 px-6">
+                        <!-- Tarjeta Recomendado 1 -->
+                        <div class="min-w-[140px] bg-white rounded-3xl p-4 shadow-sm border border-gray-100 flex flex-col items-center text-center relative overflow-hidden group cursor-pointer hover:border-brand-green/30 transition-all">
+                            <div class="absolute top-0 right-0 w-16 h-16 bg-brand-greenLight rounded-bl-full -mr-8 -mt-8 z-0"></div>
+                            <div class="w-16 h-16 mb-3 relative z-10 flex items-center justify-center text-4xl">
+                                🥦
+                            </div>
+                            <h4 class="font-bold text-brand-dark relative z-10">Brócoli</h4>
+                            <span class="text-[10px] font-medium text-brand-greenDark bg-brand-greenLight px-2 py-1 rounded-md mt-2 relative z-10">Alto en fibra</span>
+                        </div>
+
+                        <!-- Tarjeta Recomendado 2 -->
+                        <div class="min-w-[140px] bg-white rounded-3xl p-4 shadow-sm border border-gray-100 flex flex-col items-center text-center relative overflow-hidden group cursor-pointer hover:border-brand-blue/50 transition-all">
+                            <div class="absolute top-0 right-0 w-16 h-16 bg-brand-blueLight rounded-bl-full -mr-8 -mt-8 z-0"></div>
+                            <div class="w-16 h-16 mb-3 relative z-10 flex items-center justify-center text-4xl">
+                                🫐
+                            </div>
+                            <h4 class="font-bold text-brand-dark relative z-10">Arándano</h4>
+                            <span class="text-[10px] font-medium text-blue-700 bg-brand-blueLight px-2 py-1 rounded-md mt-2 relative z-10">Antioxidante</span>
+                        </div>
+                        
+                        <!-- Tarjeta Recomendado 3 -->
+                        <div class="min-w-[140px] bg-white rounded-3xl p-4 shadow-sm border border-gray-100 flex flex-col items-center text-center relative overflow-hidden group cursor-pointer hover:border-orange-200 transition-all">
+                            <div class="absolute top-0 right-0 w-16 h-16 bg-orange-50 rounded-bl-full -mr-8 -mt-8 z-0"></div>
+                            <div class="w-16 h-16 mb-3 relative z-10 flex items-center justify-center text-4xl">
+                                🥕
+                            </div>
+                            <h4 class="font-bold text-brand-dark relative z-10">Zanahoria</h4>
+                            <span class="text-[10px] font-medium text-orange-700 bg-orange-100 px-2 py-1 rounded-md mt-2 relative z-10">Vitamina A</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Recientes (Lista Vertical) -->
+                <div>
+                    <div class="flex justify-between items-end mb-4">
+                        <h3 class="text-lg font-bold text-brand-dark">Recientes</h3>
+                        <a href="#" class="text-xs font-semibold text-brand-gray hover:text-brand-dark transition-colors">Ver todos</a>
+                    </div>
+
+                    <div class="space-y-3">
+                        <!-- Item Lista 1 -->
+                        <div class="bg-white rounded-2xl p-3 shadow-sm border border-gray-100 flex items-center cursor-pointer hover:shadow-md transition-all">
+                            <div class="w-12 h-12 bg-red-50 rounded-xl flex items-center justify-center text-2xl mr-4">
+                                🍎
+                            </div>
+                            <div class="flex-1">
+                                <h4 class="font-bold text-brand-dark">Manzana</h4>
+                                <p class="text-xs text-brand-gray mt-0.5">52 kcal • Fibra • Vitamina C</p>
+                            </div>
+                            <i class="fa-solid fa-chevron-right text-gray-300 text-sm"></i>
+                        </div>
+
+                        <!-- Item Lista 2 -->
+                        <div class="bg-white rounded-2xl p-3 shadow-sm border border-gray-100 flex items-center cursor-pointer hover:shadow-md transition-all">
+                            <div class="w-12 h-12 bg-green-50 rounded-xl flex items-center justify-center text-2xl mr-4">
+                                🥑
+                            </div>
+                            <div class="flex-1">
+                                <h4 class="font-bold text-brand-dark">Aguacate</h4>
+                                <p class="text-xs text-brand-gray mt-0.5">160 kcal • Grasas saludables</p>
+                            </div>
+                            <i class="fa-solid fa-chevron-right text-gray-300 text-sm"></i>
+                        </div>
+                        
+                         <!-- Item Lista 3 -->
+                         <div class="bg-white rounded-2xl p-3 shadow-sm border border-gray-100 flex items-center cursor-pointer hover:shadow-md transition-all">
+                            <div class="w-12 h-12 bg-yellow-50 rounded-xl flex items-center justify-center text-2xl mr-4">
+                                🍌
+                            </div>
+                            <div class="flex-1">
+                                <h4 class="font-bold text-brand-dark">Plátano</h4>
+                                <p class="text-xs text-brand-gray mt-0.5">89 kcal • Potasio • Energía</p>
+                            </div>
+                            <i class="fa-solid fa-chevron-right text-gray-300 text-sm"></i>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Bottom Navigation -->
+            <div class="absolute bottom-0 w-full bg-white border-t border-gray-100 px-6 py-4 flex justify-between items-center rounded-b-[40px] z-20">
+                <div class="flex flex-col items-center text-brand-green cursor-pointer">
+                    <i class="fa-solid fa-house text-xl mb-1"></i>
+                    <span class="text-[10px] font-bold">Inicio</span>
+                </div>
+                <div class="flex flex-col items-center text-gray-400 hover:text-brand-dark transition-colors cursor-pointer">
+                    <i class="fa-solid fa-magnifying-glass text-xl mb-1"></i>
+                    <span class="text-[10px] font-semibold">Buscar</span>
+                </div>
+                <!-- Botón central flotante (Registro/Scan) -->
+                <div class="relative -top-6">
+                    <div class="w-14 h-14 bg-brand-dark rounded-full flex items-center justify-center text-white text-2xl shadow-lg cursor-pointer hover:bg-gray-800 transition-colors border-4 border-white">
+                        <i class="fa-solid fa-barcode"></i>
+                    </div>
+                </div>
+                <div class="flex flex-col items-center text-gray-400 hover:text-brand-dark transition-colors cursor-pointer">
+                    <i class="fa-solid fa-book-bookmark text-xl mb-1"></i>
+                    <span class="text-[10px] font-semibold">Registro</span>
+                </div>
+                <div class="flex flex-col items-center text-gray-400 hover:text-brand-dark transition-colors cursor-pointer" onclick="logout()">
+                    <i class="fa-regular fa-user text-xl mb-1"></i>
+                    <span class="text-[10px] font-semibold">Perfil</span>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <script>
+        // Cargar usuarios desde localStorage, con usuario por defecto si no existe
+        let usersDB = JSON.parse(localStorage.getItem('usersDB')) || [
+            { name: 'Ana García', email: 'ana@correo.com', user: 'ana_garcia', password: 'Password123' }
+        ];
+
+        // Función para guardar usersDB en localStorage
+        function saveUsersDB() {
+            localStorage.setItem('usersDB', JSON.stringify(usersDB));
+        }
+
+        // ==========================================
+        // NAVEGACIÓN Y UI
+        // ==========================================
+        function navTo(targetId) {
+            // Ocultar todas las pantallas
+            document.querySelectorAll('.screen').forEach(screen => {
+                screen.classList.remove('active');
+                screen.classList.add('fade-out');
+            });
+            
+            // Mostrar target con un pequeño delay para la animación
+            setTimeout(() => {
+                document.querySelectorAll('.screen').forEach(s => s.classList.remove('fade-out'));
+                document.getElementById(targetId).classList.add('active');
+            }, 50);
+        }
+
+        function togglePassword(inputId, iconId) {
+            const input = document.getElementById(inputId);
+            const icon = document.getElementById(iconId);
+            
+            if (input.type === 'password') {
+                input.type = 'text';
+                icon.classList.remove('fa-eye');
+                icon.classList.add('fa-eye-slash');
+            } else {
+                input.type = 'password';
+                icon.classList.remove('fa-eye-slash');
+                icon.classList.add('fa-eye');
+            }
+        }
+
+        // Selección de Chips (Onboarding)
+        function toggleChip(element, isRadioMode = false) {
+            if (isRadioMode) {
+                // Si es radio mode (Condición), deselecciona los demás
+                element.parentElement.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
+                element.classList.add('active');
+            } else {
+                // Multiselección (Objetivos)
+                element.classList.toggle('active');
+            }
+        }
+
+        // ==========================================
+        // VALIDACIONES Y LÓGICA DE REGISTRO
+        // ==========================================
+        
+        let currentRegistrationData = {};
+
+        function validateEmailUnique() {
+            const email = document.getElementById('reg-email').value;
+            const errorMsg = document.getElementById('error-email');
+            const exists = usersDB.some(u => u.email === email);
+            errorMsg.style.display = exists ? 'block' : 'none';
+            checkFormValidity();
+        }
+
+        function validateUserUnique() {
+            const user = document.getElementById('reg-user').value.replace('@', '');
+            const errorMsg = document.getElementById('error-user');
+            const exists = usersDB.some(u => u.user === user);
+            errorMsg.style.display = exists ? 'block' : 'none';
+            checkFormValidity();
+        }
+
+        function checkPasswordStrength() {
+            const pass = document.getElementById('reg-password').value;
+            const s1 = document.getElementById('str-1');
+            const s2 = document.getElementById('str-2');
+            const s3 = document.getElementById('str-3');
+            const s4 = document.getElementById('str-4');
+            
+            let strength = 0;
+            if (pass.length >= 8) strength++;
+            if (/[A-Z]/.test(pass)) strength++;
+            if (/[0-9]/.test(pass)) strength++;
+            if (/[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/.test(pass)) strength++;
+
+            // Reseteo
+            s1.style.backgroundColor = '#e2e8f0';
+            s2.style.backgroundColor = '#e2e8f0';
+            s3.style.backgroundColor = '#e2e8f0';
+            s4.style.backgroundColor = '#e2e8f0';
+
+            if (strength >= 1) s1.style.backgroundColor = '#ef4444'; // Rojo (débil)
+            if (strength >= 2) s2.style.backgroundColor = '#ef4444';
+            if (strength >= 3) {
+                s1.style.backgroundColor = '#eab308'; // Amarillo (medio)
+                s2.style.backgroundColor = '#eab308';
+                s3.style.backgroundColor = '#eab308';
+            }
+            if (strength === 4) {
+                s1.style.backgroundColor = '#4ade80'; // Verde (fuerte)
+                s2.style.backgroundColor = '#4ade80';
+                s3.style.backgroundColor = '#4ade80';
+                s4.style.backgroundColor = '#4ade80';
+            }
+            
+            checkPasswordMatch();
+            checkFormValidity();
+            return strength === 4;
+        }
+
+        function checkPasswordMatch() {
+            const p1 = document.getElementById('reg-password').value;
+            const p2 = document.getElementById('reg-password-confirm').value;
+            const errorMsg = document.getElementById('error-password-match');
+            
+            if (p2.length > 0 && p1 !== p2) {
+                errorMsg.style.display = 'block';
+            } else {
+                errorMsg.style.display = 'none';
+            }
+            checkFormValidity();
+        }
+
+        function checkFormValidity() {
+            const emailError = document.getElementById('error-email').style.display === 'block';
+            const userError = document.getElementById('error-user').style.display === 'block';
+            const matchError = document.getElementById('error-password-match').style.display === 'block';
+            const p1 = document.getElementById('reg-password').value;
+            const btn = document.getElementById('btn-next-1');
+
+            // Habilitar o deshabilitar el botón de continuar
+            if (!emailError && !userError && !matchError && p1.length >= 8) {
+                btn.disabled = false;
+            } else {
+                btn.disabled = true;
+            }
+        }
+
+        function handleRegisterStep1(e) {
+            e.preventDefault();
+            if (!checkPasswordStrength()) {
+                alert("La contraseña debe tener mínimo 8 caracteres, 1 mayúscula y 1 número.");
+                return;
+            }
+            
+            const p1 = document.getElementById('reg-password').value;
+            const p2 = document.getElementById('reg-password-confirm').value;
+            if (p1 !== p2) return;
+
+            // Guardar datos temporales
+            currentRegistrationData = {
+                name: document.getElementById('reg-name').value,
+                email: document.getElementById('reg-email').value,
+                user: document.getElementById('reg-user').value.replace('@', ''),
+                password: p1
+            };
+
+            // Avanzar al paso 2
+            navTo('screen-onboarding');
+        }
+
+        // ==========================================
+        // LÓGICA DE SALUD (Onboarding 2)
+        // ==========================================
+        function calculateIMC() {
+            const weight = parseFloat(document.getElementById('ob-weight').value);
+            const height = parseFloat(document.getElementById('ob-height').value);
+            const imcDisplay = document.getElementById('imc-value');
+
+            if (weight > 0 && height > 0) {
+                const imc = weight / (height * height);
+                imcDisplay.innerText = imc.toFixed(1);
+            } else {
+                imcDisplay.innerText = '--';
+            }
+        }
+
+        function handleRegisterComplete(e) {
+            e.preventDefault();
+            
+            // Recopilar selección de chips
+            const condition = document.querySelector('#chips-condition .active')?.innerText;
+            const goals = Array.from(document.querySelectorAll('#chips-goals .active')).map(c => c.innerText);
+
+            const finalUserData = {
+                ...currentRegistrationData,
+                birthDate: document.getElementById('ob-date').value,
+                gender: document.getElementById('ob-gender').value,
+                weight: document.getElementById('ob-weight').value,
+                height: document.getElementById('ob-height').value,
+                condition: condition,
+                goals: goals
+            };
+
+            // Guardar en "DB"
+            usersDB.push(finalUserData);
+            saveUsersDB();
+            console.log("Usuario registrado:", finalUserData);
+
+            // Loguear automáticamente e ir a home
+            loadUserData(finalUserData);
+            navTo('screen-home');
+        }
+
+        // ==========================================
+        // LÓGICA DE LOGIN
+        // ==========================================
+        function handleLogin(e) {
+            e.preventDefault();
+            const emailInput = document.getElementById('login-email').value.trim();
+            const passInput = document.getElementById('login-password').value;
+            const errorMsg = document.getElementById('login-error');
+
+            // Verificar campos vacíos
+            if (!emailInput || !passInput) {
+                errorMsg.innerText = 'Por favor, completa todos los campos.';
+                errorMsg.style.display = 'block';
+                return;
+            }
+
+            // Buscar usuario por email o usuario (sin verificar contraseña)
+            const userExists = usersDB.find(u => u.email === emailInput || u.user === emailInput);
+
+            if (!userExists) {
+                errorMsg.innerText = 'Usuario no registrado.';
+                errorMsg.style.display = 'block';
+                return;
+            }
+
+            // Verificar contraseña
+            if (userExists.password !== passInput) {
+                errorMsg.innerText = 'Contraseña incorrecta.';
+                errorMsg.style.display = 'block';
+                return;
+            }
+
+            // Login exitoso
+            errorMsg.style.display = 'none';
+            loadUserData(userExists);
+            navTo('screen-home');
+        }
+
+        function loadUserData(user) {
+            document.getElementById('home-username').innerText = user.name.split(' ')[0] + ' ' + (user.name.split(' ')[1] || '');
+            // Generar avatar dinámico con iniciales
+            const nameParam = encodeURIComponent(user.name);
+            document.getElementById('home-avatar').src = `https://ui-avatars.com/api/?name=${nameParam}&background=bae6fd&color=1e293b`;
+            
+            // Limpiar formularios
+            document.getElementById('login-form').reset();
+            document.getElementById('register-form').reset();
+            document.getElementById('onboarding-form').reset();
+            document.getElementById('imc-value').innerText = '--';
+            document.getElementById('str-1').style.backgroundColor = '#e2e8f0';
+            document.getElementById('str-2').style.backgroundColor = '#e2e8f0';
+            document.getElementById('str-3').style.backgroundColor = '#e2e8f0';
+            document.getElementById('str-4').style.backgroundColor = '#e2e8f0';
+        }
+
+        function logout() {
+            if(confirm('¿Deseas cerrar sesión?')){
+                navTo('screen-login');
+            }
+        }
+
+    </script>
+</body>
+</html>
