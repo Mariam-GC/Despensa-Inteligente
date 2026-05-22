@@ -317,14 +317,21 @@
             <!-- Header App -->
             <div class="px-6 pt-8 pb-4 bg-white rounded-b-3xl shadow-sm z-10">
                 <div class="flex justify-between items-center mb-6">
-                    <div>
-                        <p class="text-sm text-brand-gray">Buenos días,</p>
-                        <h2 class="text-2xl font-bold text-brand-dark" id="home-username">Ana García</h2>
-                    </div>
-                    <div class="w-12 h-12 bg-brand-blueLight rounded-full flex items-center justify-center text-brand-blue border-2 border-white shadow-sm overflow-hidden">
-                        <img src="https://ui-avatars.com/api/?name=Ana+Garcia&background=bae6fd&color=1e293b" id="home-avatar" alt="Perfil" class="w-full h-full object-cover">
-                    </div>
-                </div>
+    <div>
+        <p class="text-sm text-brand-gray">Buenos días,</p>
+        <h2 class="text-2xl font-bold text-brand-dark" id="home-username">Ana García</h2>
+    </div>
+    <div class="flex items-center gap-3">
+        <!-- Botón de modo oscuro -->
+        <button id="dark-mode-toggle" onclick="toggleDarkMode()" class="w-10 h-10 rounded-full bg-gray-100 hover:bg-gray-200 transition-colors flex items-center justify-center text-brand-dark shadow-sm">
+            <i id="dark-mode-icon" class="fa-solid fa-moon"></i>
+        </button>
+        <!-- Avatar -->
+        <div class="w-12 h-12 bg-brand-blueLight rounded-full flex items-center justify-center text-brand-blue border-2 border-white shadow-sm overflow-hidden">
+            <img src="https://ui-avatars.com/api/?name=Ana+Garcia&background=bae6fd&color=1e293b" id="home-avatar" alt="Perfil" class="w-full h-full object-cover">
+        </div>
+    </div>
+</div>
 
                 <!-- Barra de búsqueda -->
                 <div class="relative">
