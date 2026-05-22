@@ -196,8 +196,7 @@
                 <!-- Términos -->
                 <div class="flex items-center mt-2 mb-6">
                     <input type="checkbox" id="terms" required class="w-4 h-4 text-brand-green bg-gray-100 border-gray-300 rounded focus:ring-brand-green focus:ring-2 accent-brand-green">
-                    <label for="terms" class="ml-2 text-sm text-brand-gray">Acepto los <a href="#" class="text-brand-greenDark font-medium hover:underline">Términos y Privacidad</a></label>
-                </div>
+                    <label for="terms" class="ml-2 text-sm text-brand-gray">Acepto los <a href="#" onclick="openTermsModal(event)" class="text-brand-greenDark font-medium hover:underline">Términos y Privacidad</a></label>                </div>
 
                 <!-- Botón -->
                 <button type="submit" id="btn-next-1" class="w-full bg-brand-green hover:bg-brand-greenDark text-white font-semibold py-3.5 rounded-xl shadow-soft transition-all transform active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed">
@@ -238,8 +237,7 @@
                 <div class="grid grid-cols-2 gap-4">
                     <div>
                         <label class="block text-xs font-semibold text-brand-gray mb-1 uppercase tracking-wider">Fecha de Nac.</label>
-                        <input type="date" id="ob-date" class="input-field !pl-4 text-sm" required>
-                    </div>
+                        <input type="date" id="ob-date" class="input-field !pl-4 text-sm" required id="ob-date">                    </div>
                     <div>
                         <label class="block text-xs font-semibold text-brand-gray mb-1 uppercase tracking-wider">Género</label>
                         <select id="ob-gender" class="input-field !pl-4 text-sm bg-white appearance-none" required>
@@ -277,13 +275,13 @@
                 <div>
                     <label class="block text-xs font-semibold text-brand-gray mb-2 uppercase tracking-wider">¿Condición de salud actual?</label>
                     <div class="flex flex-wrap" id="chips-condition">
-                        <div class="chip" onclick="toggleChip(this, true)">Diabetes</div>
-                        <div class="chip" onclick="toggleChip(this, true)">Hipertensión</div>
-                        <div class="chip" onclick="toggleChip(this, true)">Obesidad</div>
-                        <div class="chip" onclick="toggleChip(this, true)">Colesterol alto</div>
-                        <div class="chip" onclick="toggleChip(this, true)">Acné General</div>
-                        <div class="chip active" onclick="toggleChip(this, true)">Ninguna</div>
-                        <div class="chip" onclick="toggleChip(this, true)">Otra</div>
+                        <div class="chip" onclick="toggleChip(this, false)">Diabetes</div>
+                        <div class="chip" onclick="toggleChip(this, false)">Hipertensión</div>
+                        <div class="chip" onclick="toggleChip(this, false)">Obesidad</div>
+                        <div class="chip" onclick="toggleChip(this, false)">Colesterol alto</div>
+                        <div class="chip" onclick="toggleChip(this, false)">Acné General</div>
+                        <div class="chip active" onclick="toggleChip(this, false)">Ninguna</div>
+                        <div class="chip" onclick="toggleChip(this, false)">Otra</div>
                     </div>
                 </div>
 
@@ -390,7 +388,8 @@
 
                     <div class="space-y-3">
                         <!-- Item Lista 1 -->
-                        <div class="bg-white rounded-2xl p-3 shadow-sm border border-gray-100 flex items-center cursor-pointer hover:shadow-md transition-all">
+                        <div class="bg-white rounded-2xl p-3 shadow-sm border border-gray-100 flex items-center cursor-pointer hover:shadow-md transition-all"
+     onclick="openPostIntake({ name:'Manzana', emoji:'🍎', kcal:52, protein:0.3, carbs:13.8, fiber:2.4, grams:100 })">
                             <div class="w-12 h-12 bg-red-50 rounded-xl flex items-center justify-center text-2xl mr-4">
                                 🍎
                             </div>
@@ -402,8 +401,8 @@
                         </div>
 
                         <!-- Item Lista 2 -->
-                        <div class="bg-white rounded-2xl p-3 shadow-sm border border-gray-100 flex items-center cursor-pointer hover:shadow-md transition-all">
-                            <div class="w-12 h-12 bg-green-50 rounded-xl flex items-center justify-center text-2xl mr-4">
+<div class="bg-white rounded-2xl p-3 shadow-sm border border-gray-100 flex items-center cursor-pointer hover:shadow-md transition-all"
+     onclick="openPostIntake({ name:'Aguacate', emoji:'🥑', kcal:160, protein:2.0, carbs:8.5, fiber:6.7, grams:100 })">                            <div class="w-12 h-12 bg-green-50 rounded-xl flex items-center justify-center text-2xl mr-4">
                                 🥑
                             </div>
                             <div class="flex-1">
@@ -414,8 +413,8 @@
                         </div>
                         
                          <!-- Item Lista 3 -->
-                         <div class="bg-white rounded-2xl p-3 shadow-sm border border-gray-100 flex items-center cursor-pointer hover:shadow-md transition-all">
-                            <div class="w-12 h-12 bg-yellow-50 rounded-xl flex items-center justify-center text-2xl mr-4">
+<div class="bg-white rounded-2xl p-3 shadow-sm border border-gray-100 flex items-center cursor-pointer hover:shadow-md transition-all"
+     onclick="openPostIntake({ name:'Plátano', emoji:'🍌', kcal:89, protein:1.1, carbs:22.8, fiber:2.6, grams:100 })">                            <div class="w-12 h-12 bg-yellow-50 rounded-xl flex items-center justify-center text-2xl mr-4">
                                 🍌
                             </div>
                             <div class="flex-1">
@@ -435,26 +434,440 @@
                     <i class="fa-solid fa-house text-xl mb-1"></i>
                     <span class="text-[10px] font-bold">Inicio</span>
                 </div>
-                <div class="flex flex-col items-center text-gray-400 hover:text-brand-dark transition-colors cursor-pointer">
+                <div class="flex flex-col items-center text-gray-400 hover:text-brand-dark transition-colors cursor-pointer" onclick="navTo('screen-search')">
                     <i class="fa-solid fa-magnifying-glass text-xl mb-1"></i>
                     <span class="text-[10px] font-semibold">Buscar</span>
-                </div>
+                 </div>
                 <!-- Botón central flotante (Registro/Scan) -->
                 <div class="relative -top-6">
-                    <div class="w-14 h-14 bg-brand-dark rounded-full flex items-center justify-center text-white text-2xl shadow-lg cursor-pointer hover:bg-gray-800 transition-colors border-4 border-white">
-                        <i class="fa-solid fa-barcode"></i>
+                    <div class="w-14 h-14 bg-brand-dark rounded-full flex items-center justify-center text-white text-2xl shadow-lg cursor-pointer hover:bg-gray-800 transition-colors border-4 border-white" onclick="navTo('screen-search')">
+                    <i class="fa-solid fa-plus"></i>
                     </div>
                 </div>
-                <div class="flex flex-col items-center text-gray-400 hover:text-brand-dark transition-colors cursor-pointer">
-                    <i class="fa-solid fa-book-bookmark text-xl mb-1"></i>
-                    <span class="text-[10px] font-semibold">Registro</span>
-                </div>
+                <div class="flex flex-col items-center text-gray-400 hover:text-brand-dark transition-colors cursor-pointer" onclick="navTo('screen-diary')">
+            <i class="fa-solid fa-book-bookmark text-xl mb-1"></i>
+            <span class="text-[10px] font-semibold">Registro</span>
+        </div>
                 <div class="flex flex-col items-center text-gray-400 hover:text-brand-dark transition-colors cursor-pointer" onclick="logout()">
                     <i class="fa-regular fa-user text-xl mb-1"></i>
                     <span class="text-[10px] font-semibold">Perfil</span>
                 </div>
             </div>
         </div>
+<!-- ============================================== -->
+<!-- PANTALLA: POST-INGESTA (Cómo me sentí)        -->
+<!-- ============================================== -->
+<div id="screen-post-intake" class="screen overflow-y-auto no-scrollbar bg-gray-50">
+
+    <!-- Header con alimento pre-cargado -->
+    <div class="bg-white border-b border-gray-100 px-5 pt-8 pb-4">
+        <button onclick="navTo('screen-home')" class="flex items-center gap-2 text-brand-gray text-sm mb-4 hover:text-brand-dark transition-colors">
+            <i class="fa-solid fa-arrow-left"></i>
+            Volver al diario
+        </button>
+        <div class="flex items-center gap-3">
+            <div class="w-14 h-14 bg-gray-50 rounded-2xl flex items-center justify-center text-3xl border border-gray-100 flex-shrink-0" id="pi-emoji">🥦</div>
+            <div class="flex-1 min-w-0">
+                <p class="font-semibold text-brand-dark text-base" id="pi-food-name">Brócoli al vapor</p>
+                <div class="flex flex-wrap gap-1.5 mt-1" id="pi-macros">
+                    <span class="pi-macro-pill">34 kcal</span>
+                    <span class="pi-macro-pill">2.8g proteína</span>
+                    <span class="pi-macro-pill">6.6g carbs</span>
+                    <span class="pi-macro-pill">2.6g fibra</span>
+                </div>
+                <p class="text-[11px] text-gray-400 mt-1.5 flex items-center gap-1" id="pi-time-tag">
+                    <i class="fa-regular fa-clock"></i>
+                    <span id="pi-time-label">Hoy, 1:30 pm · 150g</span>
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Cuerpo del formulario -->
+    <div class="p-4 flex flex-col gap-4 pb-8">
+
+        <p class="text-sm text-brand-gray px-1">¿Cómo te sentiste después de comer este alimento? Selecciona todo lo que aplique.</p>
+
+        <!-- Estado físico -->
+        <div class="pi-card">
+            <div class="pi-card-header">
+                <div class="pi-icon-box bg-emerald-50 text-emerald-700"><i class="fa-solid fa-person-running"></i></div>
+                <p class="pi-card-title">Estado físico</p>
+                <span class="pi-card-sub">¿cómo se siente tu cuerpo?</span>
+            </div>
+            <div class="pi-chips-wrap" id="chips-fisico">
+                <div class="pi-chip" onclick="togglePiChip(this,'green')" data-val="energizado"><i class="fa-solid fa-bolt"></i>Energizado</div>
+                <div class="pi-chip" onclick="togglePiChip(this,'amber')" data-val="cansado"><i class="fa-solid fa-bed"></i>Cansado</div>
+                <div class="pi-chip" onclick="togglePiChip(this,'red')" data-val="dolor-cabeza"><i class="fa-solid fa-head-side-virus"></i>Dolor de cabeza</div>
+                <div class="pi-chip" onclick="togglePiChip(this,'green')" data-val="liviano"><i class="fa-solid fa-feather"></i>Liviano</div>
+                <div class="pi-chip" onclick="togglePiChip(this,'amber')" data-val="somnoliento"><i class="fa-solid fa-moon"></i>Somnoliento</div>
+                <div class="pi-chip" onclick="togglePiChip(this,'red')" data-val="dolor-muscular"><i class="fa-solid fa-heart-crack"></i>Dolor muscular</div>
+                <div class="pi-chip" onclick="togglePiChip(this,'teal')" data-val="activo"><i class="fa-solid fa-fire"></i>Activo</div>
+                <div class="pi-chip" onclick="togglePiChip(this,'gray')" data-val="normal-fisico"><i class="fa-solid fa-circle-check"></i>Sin cambios</div>
+            </div>
+        </div>
+
+        <!-- Estado emocional -->
+        <div class="pi-card">
+            <div class="pi-card-header">
+                <div class="pi-icon-box bg-violet-50 text-violet-700"><i class="fa-solid fa-face-smile"></i></div>
+                <p class="pi-card-title">Estado emocional</p>
+                <span class="pi-card-sub">¿cómo está tu ánimo?</span>
+            </div>
+            <div class="pi-chips-wrap" id="chips-emocional">
+                <div class="pi-chip" onclick="togglePiChip(this,'purple')" data-val="tranquilo"><i class="fa-solid fa-spa"></i>Tranquilo</div>
+                <div class="pi-chip" onclick="togglePiChip(this,'teal')" data-val="feliz"><i class="fa-solid fa-face-grin"></i>Feliz</div>
+                <div class="pi-chip" onclick="togglePiChip(this,'amber')" data-val="ansioso"><i class="fa-solid fa-face-grimace"></i>Ansioso</div>
+                <div class="pi-chip" onclick="togglePiChip(this,'red')" data-val="irritable"><i class="fa-solid fa-face-angry"></i>Irritable</div>
+                <div class="pi-chip" onclick="togglePiChip(this,'blue')" data-val="concentrado"><i class="fa-solid fa-brain"></i>Concentrado</div>
+                <div class="pi-chip" onclick="togglePiChip(this,'amber')" data-val="estresado"><i class="fa-solid fa-triangle-exclamation"></i>Estresado</div>
+                <div class="pi-chip" onclick="togglePiChip(this,'gray')" data-val="normal-emocional"><i class="fa-solid fa-circle-check"></i>Sin cambios</div>
+            </div>
+        </div>
+
+        <!-- Estado digestivo -->
+        <div class="pi-card">
+            <div class="pi-card-header">
+                <div class="pi-icon-box bg-amber-50 text-amber-700"><i class="fa-solid fa-stethoscope"></i></div>
+                <p class="pi-card-title">Estado digestivo</p>
+                <span class="pi-card-sub">¿cómo reaccionó tu digestión?</span>
+            </div>
+            <div class="pi-chips-wrap" id="chips-digestivo">
+                <div class="pi-chip" onclick="togglePiChip(this,'green')" data-val="sin-molestias"><i class="fa-solid fa-circle-check"></i>Sin molestias</div>
+                <div class="pi-chip" onclick="togglePiChip(this,'amber')" data-val="inflamacion"><i class="fa-solid fa-circle-plus"></i>Inflamación</div>
+                <div class="pi-chip" onclick="togglePiChip(this,'red')" data-val="acidez"><i class="fa-solid fa-fire-flame-simple"></i>Acidez</div>
+                <div class="pi-chip" onclick="togglePiChip(this,'amber')" data-val="gases"><i class="fa-solid fa-wind"></i>Gases</div>
+                <div class="pi-chip" onclick="togglePiChip(this,'red')" data-val="nausea"><i class="fa-solid fa-face-dizzy"></i>Náusea</div>
+                <div class="pi-chip" onclick="togglePiChip(this,'teal')" data-val="saciado"><i class="fa-solid fa-face-smile-beam"></i>Saciado</div>
+                <div class="pi-chip" onclick="togglePiChip(this,'red')" data-val="malestar"><i class="fa-solid fa-xmark"></i>Malestar general</div>
+            </div>
+        </div>
+
+        <!-- Síntomas en piel -->
+        <div class="pi-card">
+            <div class="pi-card-header">
+                <div class="pi-icon-box bg-rose-50 text-rose-700"><i class="fa-solid fa-droplet"></i></div>
+                <p class="pi-card-title">Síntomas en piel</p>
+                <span class="pi-card-sub">¿notas cambios en tu piel?</span>
+            </div>
+            <div class="pi-chips-wrap" id="chips-piel">
+                <div class="pi-chip" onclick="togglePiChip(this,'gray')" data-val="piel-sin-cambios"><i class="fa-solid fa-circle-check"></i>Sin cambios</div>
+                <div class="pi-chip" onclick="togglePiChip(this,'red')" data-val="rojez"><i class="fa-solid fa-droplets"></i>Rojez</div>
+                <div class="pi-chip" onclick="togglePiChip(this,'amber')" data-val="acne"><i class="fa-solid fa-circle-dot"></i>Brote de acné</div>
+                <div class="pi-chip" onclick="togglePiChip(this,'amber')" data-val="picazon"><i class="fa-solid fa-hand-pointer"></i>Picazón</div>
+                <div class="pi-chip" onclick="togglePiChip(this,'teal')" data-val="piel-luminosa"><i class="fa-solid fa-sun"></i>Piel luminosa</div>
+                <div class="pi-chip" onclick="togglePiChip(this,'orange')" data-val="inflamacion-piel"><i class="fa-solid fa-magnifying-glass-plus"></i>Inflamación</div>
+            </div>
+        </div>
+
+        <!-- ¿Cuándo lo notaste? -->
+        <div class="pi-card">
+            <div class="pi-card-header">
+                <div class="pi-icon-box bg-blue-50 text-blue-700"><i class="fa-regular fa-clock"></i></div>
+                <p class="pi-card-title">¿Cuándo notaste estos síntomas?</p>
+            </div>
+            <div class="grid grid-cols-2 gap-2 p-3" id="timing-btns">
+                <button class="pi-timing-btn active" onclick="selectTiming(this,'inmediato')">Inmediatamente</button>
+                <button class="pi-timing-btn" onclick="selectTiming(this,'30min')">~30 minutos</button>
+                <button class="pi-timing-btn" onclick="selectTiming(this,'1hr')">~1 hora</button>
+                <button class="pi-timing-btn" onclick="selectTiming(this,'2hr+')">2 horas o más</button>
+            </div>
+        </div>
+
+        <!-- Notas adicionales -->
+        <div class="pi-card">
+            <div class="pi-card-header">
+                <div class="pi-icon-box bg-gray-100 text-brand-gray"><i class="fa-solid fa-pen-to-square"></i></div>
+                <p class="pi-card-title">Notas adicionales</p>
+                <span class="pi-card-sub">opcional</span>
+            </div>
+            <div class="px-4 pt-1 pb-2">
+                <textarea
+                    id="pi-notes"
+                    maxlength="300"
+                    placeholder="Ej: Sentí la barriga pesada unos 20 minutos después de comer..."
+                    class="w-full bg-gray-50 rounded-xl border border-gray-100 text-sm text-brand-dark p-3 resize-none outline-none focus:ring-2 focus:ring-brand-green/30 focus:border-brand-green transition-all min-h-[80px]"
+                    oninput="updateCharCount()"
+                ></textarea>
+                <p class="text-right text-[11px] text-gray-400 mt-1" id="pi-char-count">0 / 300</p>
+            </div>
+        </div>
+
+        <!-- Botón guardar -->
+        <button onclick="submitPostIntake()" class="w-full bg-brand-green hover:bg-brand-greenDark text-white font-semibold py-3.5 rounded-xl shadow-soft transition-all transform active:scale-95 flex items-center justify-center gap-2">
+            <i class="fa-solid fa-floppy-disk"></i>
+            Guardar registro
+        </button>
+
+    </div>
+
+    <!-- Pantalla de éxito (oculta por defecto) -->
+    <div id="pi-success" class="hidden absolute inset-0 bg-white flex flex-col items-center justify-center p-8 text-center gap-4 z-30">
+        <div class="w-20 h-20 bg-brand-greenLight rounded-full flex items-center justify-center text-brand-greenDark text-4xl">
+            <i class="fa-solid fa-circle-check"></i>
+        </div>
+        <h3 class="text-xl font-bold text-brand-dark">¡Registro guardado!</h3>
+        <p class="text-sm text-brand-gray" id="pi-success-msg">Tu reacción ha sido registrada. Esto nos ayuda a personalizar tus recomendaciones.</p>
+        <button onclick="navTo('screen-home')" class="mt-4 w-full bg-brand-green hover:bg-brand-greenDark text-white font-semibold py-3 rounded-xl transition-all">
+            Volver al inicio
+        </button>
+    </div>
+
+</div>
+<!-- ============================================== -->
+<!-- PANTALLA: BUSCADOR DE ALIMENTOS               -->
+<!-- ============================================== -->
+<div id="screen-search" class="screen flex flex-col bg-gray-50">
+
+    <div class="bg-white border-b border-gray-100 px-4 pt-8 pb-3">
+        <button onclick="navTo('screen-home')" class="flex items-center gap-2 text-brand-gray text-sm mb-3 hover:text-brand-dark transition-colors">
+            <i class="fa-solid fa-arrow-left"></i>
+            Volver al diario
+        </button>
+        <div class="relative mb-3">
+            <input type="text" id="search-input" oninput="filterFoods()"
+                placeholder="Buscar alimentos..."
+                class="w-full bg-gray-100 rounded-2xl py-3 pl-11 pr-4 text-sm text-brand-dark outline-none focus:ring-2 focus:ring-brand-green/40 focus:bg-white transition-all">
+            <i class="fa-solid fa-magnifying-glass absolute left-4 top-1/2 -translate-y-1/2 text-gray-400"></i>
+        </div>
+        <div class="flex gap-2 overflow-x-auto no-scrollbar pb-1" id="meal-tabs">
+            <button class="meal-tab-btn active" onclick="selectMealTab(this,'Desayuno')">☀️ Desayuno</button>
+            <button class="meal-tab-btn" onclick="selectMealTab(this,'Almuerzo')">🌤 Almuerzo</button>
+            <button class="meal-tab-btn" onclick="selectMealTab(this,'Cena')">🌙 Cena</button>
+            <button class="meal-tab-btn" onclick="selectMealTab(this,'Snack')">🍎 Snack</button>
+        </div>
+    </div>
+
+    <div class="flex-1 overflow-y-auto no-scrollbar p-4 flex flex-col gap-2" id="search-results"></div>
+
+    <!-- Modal de cantidad (oculto por defecto) -->
+    <div id="qty-modal-backdrop" class="hidden absolute inset-0 bg-black/40 z-40 flex items-end" onclick="closeQtyModal(event)">
+        <div class="bg-white w-full rounded-t-3xl p-6 pb-8" onclick="event.stopPropagation()">
+            <div class="flex items-center gap-3 mb-5">
+                <span id="modal-emoji" class="text-4xl">🍎</span>
+                <div>
+                    <p id="modal-food-name" class="font-bold text-brand-dark text-base"></p>
+                    <p id="modal-food-kcal-ref" class="text-xs text-brand-gray"></p>
+                </div>
+            </div>
+
+            <!-- Selector de unidad -->
+            <p class="text-xs font-semibold text-brand-gray uppercase tracking-wider mb-2">Unidad de medida</p>
+            <div class="grid grid-cols-2 gap-2 mb-5">
+                <button class="unit-btn active" onclick="selectUnit(this,'porciones')" id="btn-porciones">
+                    <i class="fa-solid fa-utensils mb-1 text-lg"></i>
+                    <span>Porciones</span>
+                    <span class="unit-sub">1 porción = 100g</span>
+                </button>
+                <button class="unit-btn" onclick="selectUnit(this,'gramos')" id="btn-gramos">
+                    <i class="fa-solid fa-weight-scale mb-1 text-lg"></i>
+                    <span>Gramos</span>
+                    <span class="unit-sub">cantidad exacta</span>
+                </button>
+            </div>
+
+            <!-- Input de cantidad -->
+            <p class="text-xs font-semibold text-brand-gray uppercase tracking-wider mb-2">Cantidad</p>
+            <div class="flex items-center gap-3 mb-2">
+                <button onclick="stepQty(-1)" class="qty-step-btn"><i class="fa-solid fa-minus"></i></button>
+                <input type="number" id="modal-qty-input" value="1" min="1" max="9999"
+                    class="flex-1 text-center text-2xl font-bold text-brand-dark bg-gray-50 rounded-xl py-3 border border-gray-200 outline-none focus:border-brand-green focus:ring-2 focus:ring-brand-green/20"
+                    oninput="updateModalKcal()">
+                <button onclick="stepQty(1)" class="qty-step-btn"><i class="fa-solid fa-plus"></i></button>
+            </div>
+            <p id="modal-unit-label" class="text-center text-sm text-brand-gray mb-5">porción(es)</p>
+
+            <!-- Preview de calorías -->
+            <div class="bg-brand-greenLight rounded-2xl p-3 flex justify-between items-center mb-5 border border-brand-green/20">
+                <span class="text-sm text-brand-greenDark font-medium">Calorías totales</span>
+                <span class="text-xl font-bold text-brand-greenDark" id="modal-kcal-preview">52 kcal</span>
+            </div>
+
+            <button onclick="confirmAddToDiary()" class="w-full bg-brand-green hover:bg-brand-greenDark text-white font-semibold py-3.5 rounded-xl transition-all flex items-center justify-center gap-2">
+                <i class="fa-solid fa-circle-plus"></i>
+                Agregar a <span id="modal-meal-name" class="font-bold">Desayuno</span>
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- ============================================== -->
+<!-- PANTALLA: DIARIO DEL DÍA                      -->
+<!-- ============================================== -->
+<div id="screen-diary" class="screen flex flex-col bg-gray-50">
+
+    <div class="bg-white border-b border-gray-100 px-5 pt-8 pb-4">
+        <button onclick="navTo('screen-home')" class="flex items-center gap-2 text-brand-gray text-sm mb-3">
+            <i class="fa-solid fa-arrow-left"></i>
+            Inicio
+        </button>
+        <h2 class="text-xl font-bold text-brand-dark">Mi diario de hoy</h2>
+        <!-- Resumen de macros -->
+        <div class="grid grid-cols-2 gap-2 mt-3" id="diary-macros">
+            <div class="bg-brand-greenLight rounded-xl p-3 border border-brand-green/20">
+                <p class="text-[10px] text-brand-greenDark uppercase tracking-wider font-semibold">Calorías</p>
+                <p class="text-xl font-bold text-brand-greenDark"><span id="d-kcal">0</span> <span class="text-sm font-normal">kcal</span></p>
+            </div>
+            <div class="bg-blue-50 rounded-xl p-3 border border-blue-100">
+                <p class="text-[10px] text-blue-700 uppercase tracking-wider font-semibold">Proteína</p>
+                <p class="text-xl font-bold text-blue-800"><span id="d-protein">0</span> <span class="text-sm font-normal">g</span></p>
+            </div>
+            <div class="bg-orange-50 rounded-xl p-3 border border-orange-100">
+                <p class="text-[10px] text-orange-700 uppercase tracking-wider font-semibold">Carbohidratos</p>
+                <p class="text-xl font-bold text-orange-800"><span id="d-carbs">0</span> <span class="text-sm font-normal">g</span></p>
+            </div>
+            <div class="bg-purple-50 rounded-xl p-3 border border-purple-100">
+                <p class="text-[10px] text-purple-700 uppercase tracking-wider font-semibold">Alimentos</p>
+                <p class="text-xl font-bold text-purple-800"><span id="d-items">0</span> <span class="text-sm font-normal">registros</span></p>
+            </div>
+        </div>
+    </div>
+
+    <div class="flex-1 overflow-y-auto no-scrollbar p-4 pb-8" id="diary-sections">
+        <div id="diary-empty" class="flex flex-col items-center justify-center py-16 text-brand-gray">
+            <i class="fa-solid fa-bowl-food text-4xl mb-3 text-gray-300"></i>
+            <p class="text-sm text-center">Aún no has registrado alimentos.<br>Toca <strong>+</strong> para agregar.</p>
+        </div>
+    </div>
+
+    <div class="p-4 bg-white border-t border-gray-100">
+        <button onclick="navTo('screen-search')" class="w-full bg-brand-green hover:bg-brand-greenDark text-white font-semibold py-3 rounded-xl transition-all flex items-center justify-center gap-2">
+            <i class="fa-solid fa-plus"></i>
+            Agregar alimento
+        </button>
+    </div>
+</div>
+<!-- ============================================== -->
+<!-- MODAL: TÉRMINOS Y CONDICIONES                 -->
+<!-- ============================================== -->
+<div id="terms-modal-backdrop" class="hidden absolute inset-0 bg-black/50 z-50 flex items-end">
+    <div class="bg-white w-full rounded-t-3xl flex flex-col" style="max-height: 90vh;">
+
+        <!-- Header fijo -->
+        <div class="flex items-center justify-between px-6 pt-5 pb-4 border-b border-gray-100 flex-shrink-0">
+            <div>
+                <h2 class="font-bold text-brand-dark text-base">Términos y Condiciones</h2>
+                <p class="text-xs text-brand-gray mt-0.5">Despensa Inteligente · UACH</p>
+            </div>
+            <button onclick="closeTermsModal()" class="w-8 h-8 flex items-center justify-center rounded-full bg-gray-100 text-brand-gray hover:bg-gray-200 transition-colors">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+        </div>
+
+        <!-- Contenido scrolleable -->
+        <div class="overflow-y-auto flex-1 px-6 py-5 text-sm text-brand-dark space-y-5" style="line-height: 1.7;">
+
+            <section>
+                <h3 class="font-bold text-brand-dark mb-2 flex items-center gap-2">
+                    <span class="w-6 h-6 bg-brand-greenLight text-brand-greenDark rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0">1</span>
+                    Aceptación
+                </h3>
+                <p class="text-brand-gray">Al descargar, registrar tus datos o usar la app, aceptas plenamente estos Términos y Condiciones, así como el Aviso de Confidencialidad. Si no estás de acuerdo, no uses la app.</p>
+            </section>
+
+            <section>
+                <h3 class="font-bold text-brand-dark mb-2 flex items-center gap-2">
+                    <span class="w-6 h-6 bg-brand-greenLight text-brand-greenDark rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0">2</span>
+                    Finalidad de la app
+                </h3>
+                <p class="text-brand-gray">La app ofrece recomendaciones generales de nutrición, planes de comidas, registro de actividad física y seguimiento de hábitos. <strong class="text-brand-dark">No es un servicio médico ni sustituye una consulta profesional.</strong></p>
+            </section>
+
+            <section>
+                <h3 class="font-bold text-brand-dark mb-2 flex items-center gap-2">
+                    <span class="w-6 h-6 bg-brand-greenLight text-brand-greenDark rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0">3</span>
+                    Responsabilidad del usuario
+                </h3>
+                <p class="text-brand-gray mb-2">Eres responsable de:</p>
+                <ul class="space-y-1 text-brand-gray">
+                    <li class="flex items-start gap-2"><i class="fa-solid fa-circle-check text-brand-green mt-0.5 flex-shrink-0"></i>Consultar a un médico o nutriólogo antes de seguir cualquier plan.</li>
+                    <li class="flex items-start gap-2"><i class="fa-solid fa-circle-check text-brand-green mt-0.5 flex-shrink-0"></i>Introducir datos reales (peso, alergias, condiciones de salud).</li>
+                    <li class="flex items-start gap-2"><i class="fa-solid fa-circle-check text-brand-green mt-0.5 flex-shrink-0"></i>No realizar ejercicios que te causen dolor o malestar.</li>
+                </ul>
+                <p class="text-brand-gray mt-2">La universidad y los desarrolladores no se responsabilizan por lesiones, trastornos alimenticios o daños derivados del uso de la app.</p>
+            </section>
+
+            <div class="bg-blue-50 border border-blue-100 rounded-2xl p-4">
+                <h3 class="font-bold text-blue-800 mb-3 flex items-center gap-2">
+                    <i class="fa-solid fa-shield-halved text-blue-600"></i>
+                    Aviso de Confidencialidad y Protección de Datos
+                </h3>
+                <p class="text-blue-700 text-xs mb-3">En la <strong>Universidad Autónoma de Chihuahua</strong>, la información y datos personales es tratada de forma estrictamente confidencial, de conformidad con los artículos 8, 15, 16 y 36 de la <em>Ley Federal de Protección de Datos Personales en Posesión de los Particulares</em>, y con base en los principios de licitud, consentimiento, información, calidad, finalidad, lealtad, proporcionalidad y responsabilidad.</p>
+
+                <p class="text-xs font-semibold text-blue-800 mb-1">Datos que recopilamos:</p>
+                <ul class="text-xs text-blue-700 space-y-1 mb-3">
+                    <li class="flex items-start gap-1.5"><i class="fa-solid fa-dot-circle mt-0.5 flex-shrink-0 text-blue-400"></i><span><strong>Identificación:</strong> nombre, edad, correo.</span></li>
+                    <li class="flex items-start gap-1.5"><i class="fa-solid fa-dot-circle mt-0.5 flex-shrink-0 text-blue-400"></i><span><strong>Salud y condición física:</strong> peso, altura, nivel de actividad, alergias, objetivos.</span></li>
+                    <li class="flex items-start gap-1.5"><i class="fa-solid fa-dot-circle mt-0.5 flex-shrink-0 text-blue-400"></i><span><strong>Uso:</strong> registros de comidas, ejercicios, progreso.</span></li>
+                </ul>
+
+                <p class="text-xs font-semibold text-blue-800 mb-1">Finalidad del tratamiento:</p>
+                <ul class="text-xs text-blue-700 space-y-1 mb-3">
+                    <li class="flex items-start gap-1.5"><i class="fa-solid fa-dot-circle mt-0.5 flex-shrink-0 text-blue-400"></i>Generar planes de nutrición y rutinas personalizadas.</li>
+                    <li class="flex items-start gap-1.5"><i class="fa-solid fa-dot-circle mt-0.5 flex-shrink-0 text-blue-400"></i>Mostrar tu progreso en gráficos.</li>
+                    <li class="flex items-start gap-1.5"><i class="fa-solid fa-dot-circle mt-0.5 flex-shrink-0 text-blue-400"></i>Mejorar la app mediante datos agregados anónimos.</li>
+                </ul>
+
+                <p class="text-xs font-semibold text-blue-800 mb-1">Transferencia de datos:</p>
+                <p class="text-xs text-blue-700 mb-3">No compartimos tus datos personales con terceros, excepto por obligación legal o con tu consentimiento explícito.</p>
+
+                <p class="text-xs font-semibold text-blue-800 mb-1">Derechos ARCO:</p>
+                <p class="text-xs text-blue-700">Acceso, Rectificación, Cancelación y Oposición. Puedes ejercerlos escribiéndonos directamente.</p>
+            </div>
+
+            <section>
+                <h3 class="font-bold text-brand-dark mb-2 flex items-center gap-2">
+                    <span class="w-6 h-6 bg-brand-greenLight text-brand-greenDark rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0">4</span>
+                    Propiedad intelectual
+                </h3>
+                <p class="text-brand-gray">Las rutinas, recetas, textos y diseño son propiedad de la <strong class="text-brand-dark">Universidad Autónoma de Chihuahua</strong> o de sus licenciantes. No se permite copiar, distribuir ni modificar el contenido sin autorización.</p>
+            </section>
+
+            <section>
+                <h3 class="font-bold text-brand-dark mb-2 flex items-center gap-2">
+                    <span class="w-6 h-6 bg-brand-greenLight text-brand-greenDark rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0">5</span>
+                    Suspensión de cuenta
+                </h3>
+                <p class="text-brand-gray mb-2">Podemos suspender o cancelar tu cuenta si:</p>
+                <ul class="space-y-1 text-brand-gray">
+                    <li class="flex items-start gap-2"><i class="fa-solid fa-triangle-exclamation text-amber-500 mt-0.5 flex-shrink-0"></i>Proporcionas información falsa peligrosa (ej. alergias que no tienes).</li>
+                    <li class="flex items-start gap-2"><i class="fa-solid fa-triangle-exclamation text-amber-500 mt-0.5 flex-shrink-0"></i>Usas la app para acosar a otros usuarios.</li>
+                    <li class="flex items-start gap-2"><i class="fa-solid fa-triangle-exclamation text-amber-500 mt-0.5 flex-shrink-0"></i>Intentas vulnerar la seguridad.</li>
+                </ul>
+            </section>
+
+            <section>
+                <h3 class="font-bold text-brand-dark mb-2 flex items-center gap-2">
+                    <span class="w-6 h-6 bg-brand-greenLight text-brand-greenDark rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0">6</span>
+                    Modificaciones
+                </h3>
+                <p class="text-brand-gray">Actualizaremos estos términos cuando cambie la normativa o las funcionalidades. Te avisaremos por correo o dentro de la app con al menos <strong class="text-brand-dark">7 días de anticipación.</strong></p>
+            </section>
+
+            <section>
+                <h3 class="font-bold text-brand-dark mb-2 flex items-center gap-2">
+                    <span class="w-6 h-6 bg-brand-greenLight text-brand-greenDark rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0">7</span>
+                    Ley aplicable y jurisdicción
+                </h3>
+                <p class="text-brand-gray">Estos términos se rigen por las leyes de los <strong class="text-brand-dark">Estados Unidos Mexicanos</strong>. Cualquier controversia se someterá a los tribunales de <strong class="text-brand-dark">Chihuahua, Chih.</strong></p>
+            </section>
+
+            <p class="text-xs text-brand-gray text-center border-t border-gray-100 pt-4">Si el titular de los datos no acepta en forma absoluta y completa estos términos, deberá abstenerse de compartir cualquier información a la organización por cualquier medio físico, óptico o electrónico.</p>
+
+        </div>
+
+        <!-- Footer fijo con botones -->
+        <div class="px-6 py-4 border-t border-gray-100 flex-shrink-0 flex gap-3">
+            <button onclick="closeTermsModal()" class="flex-1 py-3 rounded-xl border border-gray-200 text-brand-gray text-sm font-semibold hover:bg-gray-50 transition-colors">
+                Cerrar
+            </button>
+            <button onclick="acceptTermsAndClose()" class="flex-1 py-3 rounded-xl bg-brand-green hover:bg-brand-greenDark text-white text-sm font-semibold transition-colors flex items-center justify-center gap-2">
+                <i class="fa-solid fa-circle-check"></i>
+                Acepto
+            </button>
+        </div>
+    </div>
+</div>
 
     </main>
     <script src="login.js"></script>
