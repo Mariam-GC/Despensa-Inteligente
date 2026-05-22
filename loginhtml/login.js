@@ -570,7 +570,7 @@ function confirmAddToDiary() {
 
     if (foodDiary[key]) {
         foodDiary[key].grams += grams;
-        foodDiary[key].qty   = unit === 'porciones'
+        foodDiary[key].qty    = unit === 'porciones'
             ? foodDiary[key].grams / 100
             : foodDiary[key].grams;
     } else {
@@ -587,36 +587,39 @@ function confirmAddToDiary() {
     showDiaryToast(pendingFood.emoji + ' ' + pendingFood.name + ' añadido a ' + activeMealTab);
     filterFoods();
     renderDiaryScreen();
+    renderRecentFoods(); // ← actualiza la lista del home
 }
 
 // ── Diario ────────────────────────────────────
 function renderDiaryScreen() {
     const entries = Object.values(foodDiary).filter(e => e.qty > 0);
-    const emptyEl = document.getElementById('diary-empty');
+    const emptyEl    = document.getElementById('diary-empty');
     const sectionsEl = document.getElementById('diary-sections');
 
-    // Macros totales
+    // Totales
     const totals = entries.reduce((acc, e) => {
-        acc.kcal    += e.food.kcal    * e.qty;
-        acc.protein += e.food.protein * e.qty;
-        acc.carbs   += e.food.carbs   * e.qty;
+        const factor = e.grams / 100;
+        acc.kcal    += e.food.kcal    * factor;
+        acc.protein += e.food.protein * factor;
+        acc.carbs   += e.food.carbs   * factor;
+        acc.fat     += e.food.fat     * factor;
+        acc.fiber   += (e.food.fiber  || 0) * factor;
         return acc;
-    }, { kcal: 0, protein: 0, carbs: 0 });
+    }, { kcal:0, protein:0, carbs:0, fat:0, fiber:0 });
 
     document.getElementById('d-kcal').textContent    = Math.round(totals.kcal);
-    document.getElementById('d-protein').textContent = Math.round(totals.protein);
-    document.getElementById('d-carbs').textContent   = Math.round(totals.carbs);
-    document.getElementById('d-items').textContent   = entries.reduce((s, e) => s + e.qty, 0);
+    document.getElementById('d-protein').textContent = totals.protein.toFixed(1);
+    document.getElementById('d-carbs').textContent   = totals.carbs.toFixed(1);
+    document.getElementById('d-items').textContent   = entries.length;
 
     if (!entries.length) {
-        emptyEl.style.display = 'flex';
-        sectionsEl.innerHTML  = '';
+        emptyEl.style.display  = 'flex';
+        sectionsEl.innerHTML   = '';
         return;
     }
     emptyEl.style.display = 'none';
 
-    // Agrupar por tipo de comida
-    const byMeal = {};
+    const byMeal  = {};
     entries.forEach(e => {
         if (!byMeal[e.meal]) byMeal[e.meal] = [];
         byMeal[e.meal].push(e);
@@ -625,8 +628,9 @@ function renderDiaryScreen() {
     const ORDER = ['Desayuno','Almuerzo','Cena','Snack'];
     sectionsEl.innerHTML = ORDER.filter(m => byMeal[m]).map(meal => {
         const items    = byMeal[meal];
-        const mealKcal = Math.round(items.reduce((s, e) => s + e.food.kcal * e.qty, 0));
+        const mealKcal = Math.round(items.reduce((s,e) => s + e.food.kcal * e.grams / 100, 0));
         const icon     = MEAL_ICONS_FA[meal];
+
         return `
         <div class="diary-meal-section">
             <div class="diary-meal-title">
@@ -634,33 +638,64 @@ function renderDiaryScreen() {
                 ${meal}
                 <span class="diary-meal-kcal">${mealKcal} kcal</span>
             </div>
+
             ${items.map(e => {
-                const key      = meal + '_' + e.food.id;
-                const itemKcal = Math.round(e.food.kcal * e.qty);
+                const key    = meal + '_' + e.food.id;
+                const factor = e.grams / 100;
+                const kcal   = Math.round(e.food.kcal    * factor);
+                const prot   = (e.food.protein * factor).toFixed(1);
+                const carbs  = (e.food.carbs   * factor).toFixed(1);
+                const fat    = (e.food.fat      * factor).toFixed(1);
+                const fiber  = ((e.food.fiber || 0) * factor).toFixed(1);
+
+                const qtyLabel = e.unit === 'gramos'
+                    ? Math.round(e.grams) + 'g'
+                    : e.qty + ' porción' + (e.qty !== 1 ? 'es' : '') + ' (' + Math.round(e.grams) + 'g)';
+
                 return `
-                <div class="diary-food-row">
-                    <span style="font-size:22px;width:36px;text-align:center;flex-shrink:0">${e.food.emoji}</span>
-                    <div class="flex-1 min-w-0">
-                        <p class="text-sm font-semibold text-brand-dark">${e.food.name}</p>
-<p class="text-[11px] text-gray-400 mt-0.5">
-    ${e.unit === 'gramos'
-        ? Math.round(e.grams) + 'g'
-        : e.qty + ' porción' + (e.qty !== 1 ? 'es' : '') + ' (' + Math.round(e.grams) + 'g)'
-    } · ${Math.round(e.food.kcal * e.grams / 100)} kcal
-</p>
+                <div class="diary-food-row-expanded">
+                    <!-- Fila principal con contador -->
+                    <div class="diary-food-main">
+                        <span style="font-size:22px;width:36px;text-align:center;flex-shrink:0">${e.food.emoji}</span>
+                        <div class="flex-1 min-w-0">
+                            <p class="text-sm font-semibold text-brand-dark leading-tight">${e.food.name}</p>
+                            <p class="text-[11px] text-gray-400 mt-0.5">${qtyLabel} · ${kcal} kcal</p>
+                        </div>
+                        <div class="df-counter">
+                            <button class="df-counter-btn remove"
+                                    onclick="changeDiaryQty('${key}', -1)"
+                                    aria-label="Reducir o eliminar">
+                                <i class="fa-solid ${e.grams <= (e.unit === 'gramos' ? 1 : 100) ? 'fa-trash' : 'fa-minus'}"></i>
+                            </button>
+                            <span class="df-counter-val">
+                                ${e.unit === 'gramos' ? Math.round(e.grams) + 'g' : e.qty + 'x'}
+                            </span>
+                            <button class="df-counter-btn"
+                                    onclick="changeDiaryQty('${key}', 1)"
+                                    aria-label="Aumentar cantidad">
+                                <i class="fa-solid fa-plus"></i>
+                            </button>
+                        </div>
                     </div>
-                    <div class="df-counter">
-                        <button class="df-counter-btn remove"
-                                onclick="changeDiaryQty('${key}', -1)"
-                                aria-label="Reducir o eliminar">
-                            <i class="fa-solid ${e.qty === 1 ? 'fa-trash' : 'fa-minus'}"></i>
-                        </button>
-                        <span class="df-counter-val">${e.qty}</span>
-                        <button class="df-counter-btn"
-                                onclick="changeDiaryQty('${key}', 1)"
-                                aria-label="Aumentar cantidad">
-                            <i class="fa-solid fa-plus"></i>
-                        </button>
+
+                    <!-- Chips de nutrientes -->
+                    <div class="diary-food-nutrients">
+                        <div class="nutrient-chip">
+                            <span class="nutrient-chip-val">${kcal}</span>
+                            <span class="nutrient-chip-label">kcal</span>
+                        </div>
+                        <div class="nutrient-chip">
+                            <span class="nutrient-chip-val">${prot}g</span>
+                            <span class="nutrient-chip-label">Proteína</span>
+                        </div>
+                        <div class="nutrient-chip">
+                            <span class="nutrient-chip-val">${carbs}g</span>
+                            <span class="nutrient-chip-label">Carbs</span>
+                        </div>
+                        <div class="nutrient-chip">
+                            <span class="nutrient-chip-val">${fat}g</span>
+                            <span class="nutrient-chip-label">Grasa</span>
+                        </div>
                     </div>
                 </div>`;
             }).join('')}
@@ -670,9 +705,21 @@ function renderDiaryScreen() {
 
 function changeDiaryQty(key, delta) {
     if (!foodDiary[key]) return;
-    foodDiary[key].qty += delta;
-    if (foodDiary[key].qty <= 0) delete foodDiary[key];
+    const entry = foodDiary[key];
+    const step  = entry.unit === 'gramos' ? 10 : 100; // 10g ó 1 porción (100g)
+
+    entry.grams += delta * step;
+
+    if (entry.grams <= 0) {
+        delete foodDiary[key];
+    } else {
+        entry.qty = entry.unit === 'gramos'
+            ? entry.grams
+            : entry.grams / 100;
+    }
+
     renderDiaryScreen();
+    renderRecentFoods();
 }
 
 // ── Toast ─────────────────────────────────────
@@ -756,4 +803,71 @@ function closeTermsModal() {
 function acceptTermsAndClose() {
     document.getElementById('terms').checked = true;
     closeTermsModal();
+}
+
+function renderRecentFoods() {
+    const container = document.getElementById('recent-foods-list');
+    const emptyEl   = document.getElementById('recent-empty');
+    if (!container) return;
+
+    const entries = Object.values(foodDiary).filter(e => e.qty > 0);
+
+    if (!entries.length) {
+        if (emptyEl) emptyEl.style.display = 'block';
+        // Limpiar tarjetas previas pero dejar el empty state
+        container.querySelectorAll('.recent-food-card').forEach(c => c.remove());
+        return;
+    }
+
+    if (emptyEl) emptyEl.style.display = 'none';
+
+    // Reconstruir lista
+    container.querySelectorAll('.recent-food-card').forEach(c => c.remove());
+
+    entries.forEach(e => {
+        const factor = e.grams / 100;
+        const kcal   = Math.round(e.food.kcal    * factor);
+        const prot   = (e.food.protein * factor).toFixed(1);
+        const carbs  = (e.food.carbs   * factor).toFixed(1);
+        const fat    = (e.food.fat     * factor).toFixed(1);
+
+        const qtyLabel = e.unit === 'gramos'
+            ? Math.round(e.grams) + 'g'
+            : e.qty + ' porción' + (e.qty !== 1 ? 'es' : '');
+
+        const card = document.createElement('div');
+        card.className = 'recent-food-card';
+        card.onclick   = () => openPostIntake({
+            name:    e.food.name,
+            emoji:   e.food.emoji,
+            kcal:    kcal,
+            protein: prot,
+            carbs:   carbs,
+            fiber:   e.food.fiber || 0,
+            grams:   Math.round(e.grams)
+        });
+
+        card.innerHTML = `
+            <div style="width:44px;height:44px;background:#f8fafc;border-radius:12px;
+                        display:flex;align-items:center;justify-content:center;
+                        font-size:22px;border:1px solid #f1f5f9;flex-shrink:0;">
+                ${e.food.emoji}
+            </div>
+            <div class="flex-1 min-w-0">
+                <p style="font-size:14px;font-weight:600;color:#1e293b;">${e.food.name}</p>
+                <p style="font-size:11px;color:#94a3b8;margin-top:2px;">
+                    ${e.meal} · ${qtyLabel}
+                </p>
+                <div style="display:flex;gap:6px;margin-top:4px;flex-wrap:wrap;">
+                    <span class="pi-macro-pill">${kcal} kcal</span>
+                    <span class="pi-macro-pill">${prot}g prot</span>
+                    <span class="pi-macro-pill">${carbs}g carbs</span>
+                    <span class="pi-macro-pill">${fat}g grasa</span>
+                </div>
+            </div>
+            <i class="fa-solid fa-chevron-right" style="color:#e2e8f0;font-size:13px;flex-shrink:0;"></i>
+        `;
+
+        container.appendChild(card);
+    });
 }

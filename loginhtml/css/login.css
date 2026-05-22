@@ -457,3 +457,82 @@
     background: #f1f5f9;
     border-color: #cbd5e1;
 }
+
+/* =============================================
+   DIARY DETAIL STYLES
+   ============================================= */
+.diary-nutrient-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 11px;
+    padding: 3px 0;
+    border-bottom: 0.5px solid #f1f5f9;
+}
+.diary-nutrient-row:last-child { border-bottom: none; }
+.diary-nutrient-label { color: #94a3b8; }
+.diary-nutrient-value { font-weight: 600; color: #1e293b; }
+
+.diary-food-row-expanded {
+    background: white;
+    border-radius: 16px;
+    border: 1px solid #f1f5f9;
+    margin-bottom: 8px;
+    overflow: hidden;
+    transition: box-shadow 0.15s;
+}
+.diary-food-row-expanded:hover { box-shadow: 0 2px 8px rgba(0,0,0,0.06); }
+
+.diary-food-main {
+    padding: 11px 12px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.diary-food-nutrients {
+    background: #f8fafc;
+    border-top: 0.5px solid #f1f5f9;
+    padding: 8px 12px;
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 6px;
+}
+
+.nutrient-chip {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background: white;
+    border-radius: 10px;
+    padding: 6px 4px;
+    border: 0.5px solid #e2e8f0;
+}
+.nutrient-chip-val {
+    font-size: 13px;
+    font-weight: 700;
+    color: #1e293b;
+}
+.nutrient-chip-label {
+    font-size: 9px;
+    color: #94a3b8;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    margin-top: 1px;
+}
+
+.recent-food-card {
+    background: white;
+    border-radius: 16px;
+    border: 1px solid #f1f5f9;
+    padding: 11px 12px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    cursor: pointer;
+    transition: all 0.15s;
+}
+.recent-food-card:hover {
+    border-color: #bbf7d0;
+    box-shadow: 0 2px 8px rgba(74,222,128,0.1);
+}

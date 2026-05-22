@@ -380,53 +380,19 @@
                 </div>
 
                 <!-- Recientes (Lista Vertical) -->
-                <div>
-                    <div class="flex justify-between items-end mb-4">
-                        <h3 class="text-lg font-bold text-brand-dark">Recientes</h3>
-                        <a href="#" class="text-xs font-semibold text-brand-gray hover:text-brand-dark transition-colors">Ver todos</a>
-                    </div>
-
-                    <div class="space-y-3">
-                        <!-- Item Lista 1 -->
-                        <div class="bg-white rounded-2xl p-3 shadow-sm border border-gray-100 flex items-center cursor-pointer hover:shadow-md transition-all"
-     onclick="openPostIntake({ name:'Manzana', emoji:'🍎', kcal:52, protein:0.3, carbs:13.8, fiber:2.4, grams:100 })">
-                            <div class="w-12 h-12 bg-red-50 rounded-xl flex items-center justify-center text-2xl mr-4">
-                                🍎
-                            </div>
-                            <div class="flex-1">
-                                <h4 class="font-bold text-brand-dark">Manzana</h4>
-                                <p class="text-xs text-brand-gray mt-0.5">52 kcal • Fibra • Vitamina C</p>
-                            </div>
-                            <i class="fa-solid fa-chevron-right text-gray-300 text-sm"></i>
-                        </div>
-
-                        <!-- Item Lista 2 -->
-<div class="bg-white rounded-2xl p-3 shadow-sm border border-gray-100 flex items-center cursor-pointer hover:shadow-md transition-all"
-     onclick="openPostIntake({ name:'Aguacate', emoji:'🥑', kcal:160, protein:2.0, carbs:8.5, fiber:6.7, grams:100 })">                            <div class="w-12 h-12 bg-green-50 rounded-xl flex items-center justify-center text-2xl mr-4">
-                                🥑
-                            </div>
-                            <div class="flex-1">
-                                <h4 class="font-bold text-brand-dark">Aguacate</h4>
-                                <p class="text-xs text-brand-gray mt-0.5">160 kcal • Grasas saludables</p>
-                            </div>
-                            <i class="fa-solid fa-chevron-right text-gray-300 text-sm"></i>
-                        </div>
-                        
-                         <!-- Item Lista 3 -->
-<div class="bg-white rounded-2xl p-3 shadow-sm border border-gray-100 flex items-center cursor-pointer hover:shadow-md transition-all"
-     onclick="openPostIntake({ name:'Plátano', emoji:'🍌', kcal:89, protein:1.1, carbs:22.8, fiber:2.6, grams:100 })">                            <div class="w-12 h-12 bg-yellow-50 rounded-xl flex items-center justify-center text-2xl mr-4">
-                                🍌
-                            </div>
-                            <div class="flex-1">
-                                <h4 class="font-bold text-brand-dark">Plátano</h4>
-                                <p class="text-xs text-brand-gray mt-0.5">89 kcal • Potasio • Energía</p>
-                            </div>
-                            <i class="fa-solid fa-chevron-right text-gray-300 text-sm"></i>
-                        </div>
-                    </div>
-                </div>
-
-            </div>
+<div>
+    <div class="flex justify-between items-end mb-4">
+        <h3 class="text-lg font-bold text-brand-dark">Recientes</h3>
+        <a href="#" onclick="navTo('screen-diary')" class="text-xs font-semibold text-brand-greenDark hover:underline">Ver todos</a>
+    </div>
+    <div id="recent-foods-list" class="space-y-3">
+        <!-- Se rellena dinámicamente desde login.js -->
+        <div class="text-center py-6 text-brand-gray text-sm" id="recent-empty">
+            <i class="fa-solid fa-bowl-food text-2xl text-gray-300 mb-2 block"></i>
+            Aún no has registrado alimentos hoy.
+        </div>
+    </div>
+</div>
 
             <!-- Bottom Navigation -->
             <div class="absolute bottom-0 w-full bg-white border-t border-gray-100 px-6 py-4 flex justify-between items-center rounded-b-[40px] z-20">
@@ -724,11 +690,11 @@
     </div>
 
     <div class="flex-1 overflow-y-auto no-scrollbar p-4 pb-8" id="diary-sections">
-        <div id="diary-empty" class="flex flex-col items-center justify-center py-16 text-brand-gray">
-            <i class="fa-solid fa-bowl-food text-4xl mb-3 text-gray-300"></i>
-            <p class="text-sm text-center">Aún no has registrado alimentos.<br>Toca <strong>+</strong> para agregar.</p>
-        </div>
+    <div id="diary-empty" class="flex flex-col items-center justify-center py-16 text-brand-gray">
+        <i class="fa-solid fa-bowl-food text-4xl mb-3 text-gray-300"></i>
+        <p class="text-sm text-center">Aún no has registrado alimentos.<br>Toca <strong>+</strong> para agregar.</p>
     </div>
+</div>
 
     <div class="p-4 bg-white border-t border-gray-100">
         <button onclick="navTo('screen-search')" class="w-full bg-brand-green hover:bg-brand-greenDark text-white font-semibold py-3 rounded-xl transition-all flex items-center justify-center gap-2">
