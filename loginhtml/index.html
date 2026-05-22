@@ -465,51 +465,18 @@
                 </div>
 
                 <!-- Recientes (Lista Vertical) -->
-                <div>
-                    <div class="flex justify-between items-end mb-4">
-                        <h3 class="text-lg font-bold text-brand-dark">Recientes</h3>
-                        <a href="#" class="text-xs font-semibold text-brand-gray hover:text-brand-dark transition-colors">Ver todos</a>
-                    </div>
+<div>
+    <div class="flex justify-between items-end mb-4">
+        <h3 class="text-lg font-bold text-brand-dark">Recientes</h3>
+        <button onclick="clearRecents()" class="text-xs font-semibold text-brand-gray hover:text-red-500 transition-colors">
+            <i class="fa-regular fa-trash-alt"></i> Limpiar
+        </button>
+    </div>
 
-                    <div class="space-y-3">
-                        <!-- Item Lista 1 -->
-                        <div class="bg-white rounded-2xl p-3 shadow-sm border border-gray-100 flex items-center cursor-pointer hover:shadow-md transition-all"
-     onclick="openPostIntake({ name:'Manzana', emoji:'🍎', kcal:52, protein:0.3, carbs:13.8, fiber:2.4, grams:100 })">
-                            <div class="w-12 h-12 bg-red-50 rounded-xl flex items-center justify-center text-2xl mr-4">
-                                🍎
-                            </div>
-                            <div class="flex-1">
-                                <h4 class="font-bold text-brand-dark">Manzana</h4>
-                                <p class="text-xs text-brand-gray mt-0.5">52 kcal • Fibra • Vitamina C</p>
-                            </div>
-                            <i class="fa-solid fa-chevron-right text-gray-300 text-sm"></i>
-                        </div>
-
-                        <!-- Item Lista 2 -->
-<div class="bg-white rounded-2xl p-3 shadow-sm border border-gray-100 flex items-center cursor-pointer hover:shadow-md transition-all"
-     onclick="openPostIntake({ name:'Aguacate', emoji:'🥑', kcal:160, protein:2.0, carbs:8.5, fiber:6.7, grams:100 })">                            <div class="w-12 h-12 bg-green-50 rounded-xl flex items-center justify-center text-2xl mr-4">
-                                🥑
-                            </div>
-                            <div class="flex-1">
-                                <h4 class="font-bold text-brand-dark">Aguacate</h4>
-                                <p class="text-xs text-brand-gray mt-0.5">160 kcal • Grasas saludables</p>
-                            </div>
-                            <i class="fa-solid fa-chevron-right text-gray-300 text-sm"></i>
-                        </div>
-                        
-                         <!-- Item Lista 3 -->
-<div class="bg-white rounded-2xl p-3 shadow-sm border border-gray-100 flex items-center cursor-pointer hover:shadow-md transition-all"
-     onclick="openPostIntake({ name:'Plátano', emoji:'🍌', kcal:89, protein:1.1, carbs:22.8, fiber:2.6, grams:100 })">                            <div class="w-12 h-12 bg-yellow-50 rounded-xl flex items-center justify-center text-2xl mr-4">
-                                🍌
-                            </div>
-                            <div class="flex-1">
-                                <h4 class="font-bold text-brand-dark">Plátano</h4>
-                                <p class="text-xs text-brand-gray mt-0.5">89 kcal • Potasio • Energía</p>
-                            </div>
-                            <i class="fa-solid fa-chevron-right text-gray-300 text-sm"></i>
-                        </div>
-                    </div>
-                </div>
+    <div id="recent-list" class="space-y-3">
+        <!-- Se llenará dinámicamente con JS -->
+    </div>
+</div>
 
             </div>
 
@@ -788,24 +755,24 @@
         </button>
         <h2 class="text-xl font-bold text-brand-dark">Mi diario de hoy</h2>
         <!-- Resumen de macros -->
-        <div class="grid grid-cols-2 gap-2 mt-3" id="diary-macros">
-            <div class="bg-brand-greenLight rounded-xl p-3 border border-brand-green/20">
-                <p class="text-[10px] text-brand-greenDark uppercase tracking-wider font-semibold">Calorías</p>
-                <p class="text-xl font-bold text-brand-greenDark"><span id="d-kcal">0</span> <span class="text-sm font-normal">kcal</span></p>
-            </div>
-            <div class="bg-blue-50 rounded-xl p-3 border border-blue-100">
-                <p class="text-[10px] text-blue-700 uppercase tracking-wider font-semibold">Proteína</p>
-                <p class="text-xl font-bold text-blue-800"><span id="d-protein">0</span> <span class="text-sm font-normal">g</span></p>
-            </div>
-            <div class="bg-orange-50 rounded-xl p-3 border border-orange-100">
-                <p class="text-[10px] text-orange-700 uppercase tracking-wider font-semibold">Carbohidratos</p>
-                <p class="text-xl font-bold text-orange-800"><span id="d-carbs">0</span> <span class="text-sm font-normal">g</span></p>
-            </div>
-            <div class="bg-purple-50 rounded-xl p-3 border border-purple-100">
-                <p class="text-[10px] text-purple-700 uppercase tracking-wider font-semibold">Alimentos</p>
-                <p class="text-xl font-bold text-purple-800"><span id="d-items">0</span> <span class="text-sm font-normal">registros</span></p>
-            </div>
-        </div>
+<div class="grid grid-cols-2 gap-2 mt-3" id="diary-macros">
+    <div class="bg-brand-greenLight rounded-xl p-3 border border-brand-green/20">
+        <p class="text-[10px] text-brand-greenDark uppercase tracking-wider font-semibold">🔥 Calorías</p>
+        <p class="text-xl font-bold text-brand-greenDark"><span id="d-kcal">0</span> <span class="text-sm font-normal">kcal</span></p>
+    </div>
+    <div class="bg-blue-50 rounded-xl p-3 border border-blue-100">
+        <p class="text-[10px] text-blue-700 uppercase tracking-wider font-semibold">💪 Proteína</p>
+        <p class="text-xl font-bold text-blue-800"><span id="d-protein">0</span> <span class="text-sm font-normal">g</span></p>
+    </div>
+    <div class="bg-yellow-50 rounded-xl p-3 border border-yellow-100">
+        <p class="text-[10px] text-yellow-700 uppercase tracking-wider font-semibold">🍚 Carbohidratos</p>
+        <p class="text-xl font-bold text-yellow-800"><span id="d-carbs">0</span> <span class="text-sm font-normal">g</span></p>
+    </div>
+    <div class="bg-orange-50 rounded-xl p-3 border border-orange-100">
+        <p class="text-[10px] text-orange-700 uppercase tracking-wider font-semibold">🧈 Grasa</p>
+        <p class="text-xl font-bold text-orange-800"><span id="d-fat">0</span> <span class="text-sm font-normal">g</span></p>
+    </div>
+</div>
     </div>
 
     <div class="flex-1 overflow-y-auto no-scrollbar p-4 pb-8" id="diary-sections">
