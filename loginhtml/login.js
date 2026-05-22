@@ -1,11 +1,14 @@
 // Cargar usuarios desde localStorage, con usuario por defecto si no existe
-let usersDB = JSON.parse(localStorage.getItem('usersDB')) || [
-    { name: 'Ana García', email: 'ana@correo.com', user: 'ana_garcia', password: 'Password123' }
-];
+// let usersDB = JSON.parse(localStorage.getItem('usersDB')) || [
+//     { name: 'Ana García', email: 'ana@correo.com', user: 'ana_garcia', password: 'Password123' }
+// ];
+// let usersDB = JSON.parse(localStorage.getItem('usersDB')) || [
+//     { name: 'test', email: 'test@correo.com', user: 'test', password: 'Password123' }
+// ];
 
-function saveUsersDB() {
-    localStorage.setItem('usersDB', JSON.stringify(usersDB));
-}
+// function saveUsersDB() {
+//     localStorage.setItem('usersDB', JSON.stringify(usersDB));
+// }
 
 // ==========================================
 // RECIENTES EN HOME
@@ -132,7 +135,8 @@ function navTo(targetId) {
                     input.value = '';
                     input.focus();
                 }
-                renderSearchResults(FOOD_DB);
+                // Llama al filtro reactivo alimentado por la BD en vez de pintar el objeto estático directo
+                filterFoods(); 
             }, 100);
         }
         if (targetId === 'screen-diary') {
@@ -172,19 +176,31 @@ function toggleChip(element, isRadioMode = false) {
 // ==========================================
 let currentRegistrationData = {};
 
+// function validateEmailUnique() {
+//     const email = document.getElementById('reg-email').value;
+//     const errorMsg = document.getElementById('error-email');
+//     const exists = usersDB.some(u => u.email === email);
+//     errorMsg.style.display = exists ? 'block' : 'none';
+//     checkFormValidity();
+// }
+
+// function validateUserUnique() {
+//     const user = document.getElementById('reg-user').value.replace('@', '');
+//     const errorMsg = document.getElementById('error-user');
+//     const exists = usersDB.some(u => u.user === user);
+//     errorMsg.style.display = exists ? 'block' : 'none';
+//     checkFormValidity();
+// }
+
 function validateEmailUnique() {
-    const email = document.getElementById('reg-email').value;
     const errorMsg = document.getElementById('error-email');
-    const exists = usersDB.some(u => u.email === email);
-    errorMsg.style.display = exists ? 'block' : 'none';
+    if (errorMsg) errorMsg.style.display = 'none'; // Desactivado localmente para delegar al Back
     checkFormValidity();
 }
 
 function validateUserUnique() {
-    const user = document.getElementById('reg-user').value.replace('@', '');
     const errorMsg = document.getElementById('error-user');
-    const exists = usersDB.some(u => u.user === user);
-    errorMsg.style.display = exists ? 'block' : 'none';
+    if (errorMsg) errorMsg.style.display = 'none'; // Desactivado localmente para delegar al Back
     checkFormValidity();
 }
 
@@ -233,13 +249,20 @@ function checkPasswordMatch() {
     checkFormValidity();
 }
 
+// function checkFormValidity() {
+//     const emailError = document.getElementById('error-email').style.display === 'block';
+//     const userError = document.getElementById('error-user').style.display === 'block';
+//     const matchError = document.getElementById('error-password-match').style.display === 'block';
+//     const p1 = document.getElementById('reg-password').value;
+//     const btn = document.getElementById('btn-next-1');
+//     if (btn) btn.disabled = (emailError || userError || matchError || p1.length < 8);
+// }
+
 function checkFormValidity() {
-    const emailError = document.getElementById('error-email').style.display === 'block';
-    const userError = document.getElementById('error-user').style.display === 'block';
-    const matchError = document.getElementById('error-password-match').style.display === 'block';
+    // Permite habilitar el botón de continuar basándose únicamente en el largo de la contraseña
     const p1 = document.getElementById('reg-password').value;
     const btn = document.getElementById('btn-next-1');
-    if (btn) btn.disabled = (emailError || userError || matchError || p1.length < 8);
+    if (btn) btn.disabled = (p1.length < 8);
 }
 
 function handleRegisterStep1(e) {
@@ -275,13 +298,61 @@ function calculateIMC() {
     }
 }
 
+// function handleRegisterComplete(e) {
+//     e.preventDefault();
+//     const birthDateVal = document.getElementById('ob-date').value;
+//     if (!birthDateVal) {
+//         alert('Por favor ingresa tu fecha de nacimiento.');
+//         return;
+//     }
+//     const birthDate = new Date(birthDateVal);
+//     const today = new Date();
+//     let age = today.getFullYear() - birthDate.getFullYear();
+//     const monthDiff = today.getMonth() - birthDate.getMonth();
+//     if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
+//         age--;
+//     }
+//     if (age < 12) {
+//         alert('La edad mínima es 12 años.');
+//         return;
+//     }
+//     if (age > 99) {
+//         alert('La edad máxima es 99 años.');
+//         return;
+//     }
+
+//     const condition = document.querySelector('#chips-condition .active')?.innerText;
+//     const goals = Array.from(document.querySelectorAll('#chips-goals .active')).map(c => c.innerText);
+
+//     const finalUserData = {
+//         ...currentRegistrationData,
+//         birthDate: birthDateVal,
+//         gender: document.getElementById('ob-gender').value,
+//         weight: document.getElementById('ob-weight').value,
+//         height: document.getElementById('ob-height').value,
+//         condition: condition,
+//         goals: goals
+//     };
+
+//     usersDB.push(finalUserData);
+//     saveUsersDB();
+//     loadUserData(finalUserData);
+//     navTo('screen-home');
+// }
+
+// ==========================================
+// REGISTRO ALTA EN BASE DE DATOS (REEMPLAZO)
+// ==========================================
 function handleRegisterComplete(e) {
     e.preventDefault();
+    
     const birthDateVal = document.getElementById('ob-date').value;
     if (!birthDateVal) {
         alert('Por favor ingresa tu fecha de nacimiento.');
         return;
     }
+    
+    // Validación de rango de edad escolar/clínico habitual
     const birthDate = new Date(birthDateVal);
     const today = new Date();
     let age = today.getFullYear() - birthDate.getFullYear();
@@ -289,20 +360,18 @@ function handleRegisterComplete(e) {
     if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
         age--;
     }
-    if (age < 12) {
-        alert('La edad mínima es 12 años.');
-        return;
-    }
-    if (age > 99) {
-        alert('La edad máxima es 99 años.');
+    if (age < 12 || age > 99) {
+        alert('Ingresa una edad válida (entre 12 y 99 años).');
         return;
     }
 
-    const condition = document.querySelector('#chips-condition .active')?.innerText;
+    // Extraer condiciones seleccionadas de los chips visuales
+    const condition = document.querySelector('#chips-condition .active')?.innerText || 'Ninguna';
     const goals = Array.from(document.querySelectorAll('#chips-goals .active')).map(c => c.innerText);
 
+    // Unificamos los datos de la cuenta (Paso 1) junto con los físicos (Paso 2)
     const finalUserData = {
-        ...currentRegistrationData,
+        ...currentRegistrationData, // Trae name, email, user y password guardados en el paso previo
         birthDate: birthDateVal,
         gender: document.getElementById('ob-gender').value,
         weight: document.getElementById('ob-weight').value,
@@ -311,17 +380,60 @@ function handleRegisterComplete(e) {
         goals: goals
     };
 
-    usersDB.push(finalUserData);
-    saveUsersDB();
-    loadUserData(finalUserData);
-    navTo('screen-home');
+    const REGISTER_API_URL = 'http://localhost:8080/api/users/register';
+
+    // Enviar el paquete de alta a Spring Boot de forma asíncrona
+    fetch(REGISTER_API_URL, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(finalUserData)
+    })
+    .then(response => {
+        if (!response.ok) {
+            // Si el backend arroja error (ej: usuario duplicado), leemos el mensaje de la API
+            return response.json().then(err => { throw new Error(err.message || 'Error en el alta'); });
+        }
+        return response.json();
+    })
+    .then(userSaved => {
+        // Adaptamos la respuesta para cargar la sesión activa en el Home
+        const sesionUsuario = {
+            name: userSaved.fullName,
+            email: userSaved.email,
+            user: userSaved.username
+        };
+
+        loadUserData(sesionUsuario);
+        
+        // Limpiamos los formularios de la UI
+        document.getElementById('register-form').reset();
+        document.getElementById('onboarding-form').reset();
+        currentRegistrationData = {};
+
+        // Ir a la pantalla de Inicio
+        navTo('screen-home');
+        
+        setTimeout(() => {
+            showToast('¡Cuenta creada con éxito! Bienvenido.');
+        }, 400);
+    })
+    .catch(error => {
+        console.error('Error al dar de alta:', error);
+        alert(error.message || 'No se pudo conectar con el servidor para crear la cuenta.');
+    });
 }
 
 // ==========================================
 // LOGIN
 // ==========================================
+// ==========================================
+// LOGIN CONEXIÓN BACKEND (REMPLAZO)
+// ==========================================
 function handleLogin(e) {
     e.preventDefault();
+    
     const emailInput = document.getElementById('login-email').value.trim();
     const passInput = document.getElementById('login-password').value;
     const errorMsg = document.getElementById('login-error');
@@ -332,27 +444,57 @@ function handleLogin(e) {
         return;
     }
 
-    const userExists = usersDB.find(u => u.email === emailInput || u.user === emailInput);
-    if (!userExists) {
-        errorMsg.innerText = 'Usuario no registrado.';
-        errorMsg.style.display = 'block';
-        return;
-    }
-    if (userExists.password !== passInput) {
-        errorMsg.innerText = 'Contraseña incorrecta.';
-        errorMsg.style.display = 'block';
-        return;
-    }
+    const LOGIN_API_URL = 'http://localhost:8080/api/users/login';
 
-    errorMsg.style.display = 'none';
-    loadUserData(userExists);
-    navTo('screen-home');
+    fetch(LOGIN_API_URL, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            usernameOrEmail: emailInput,
+            password: passInput
+        })
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Credenciales incorrectas');
+        }
+        return response.json();
+    })
+    .then(userServer => {
+        // Ocultar mensaje de error si existía
+        errorMsg.style.display = 'none';
+
+        // Adaptamos el mapeo de propiedades del backend al formato del Front
+        const sesionUsuario = {
+            name: userServer.fullName, 
+            email: userServer.email,
+            user: userServer.username
+        };
+
+        // Forzar la carga de datos en las etiquetas del Home HTML
+        loadUserData(sesionUsuario);
+        
+        // Navegamos al Home
+        navTo('screen-home');
+        
+        // Mostrar saludo con tu función de notificaciones incorporada
+        setTimeout(() => {
+            showToast('¡Bienvenido, ' + sesionUsuario.name + '!');
+        }, 300);
+    })
+    .catch(error => {
+        console.error('Error al intentar autenticar:', error);
+        errorMsg.innerText = 'Usuario o contraseña incorrectos.';
+        errorMsg.style.display = 'block';
+    });
 }
 
 function loadUserData(user) {
     const usernameEl = document.getElementById('home-username');
     if (usernameEl) {
-        usernameEl.innerText = user.name.split(' ')[0] + ' ' + (user.name.split(' ')[1] || '');
+        usernameEl.innerText = user.name;
     }
     const nameParam = encodeURIComponent(user.name);
     const avatarEl = document.getElementById('home-avatar');
@@ -462,28 +604,45 @@ function resetPostIntakeForm() {
 // ==========================================
 // BASE DE DATOS DE ALIMENTOS
 // ==========================================
-const FOOD_DB = [
-    { id:1, name:'Manzana', emoji:'🍎', group:'Frutas', kcal:52, protein:0.3, carbs:13.8, fiber:2.4, fat:0.2 },
-    { id:2, name:'Plátano', emoji:'🍌', group:'Frutas', kcal:89, protein:1.1, carbs:22.8, fiber:2.6, fat:0.3 },
-    { id:3, name:'Aguacate', emoji:'🥑', group:'Frutas', kcal:160, protein:2.0, carbs:8.5, fiber:6.7, fat:14.7 },
-    { id:4, name:'Arándano', emoji:'🫐', group:'Frutas', kcal:57, protein:0.7, carbs:14.5, fiber:2.4, fat:0.3 },
-    { id:5, name:'Fresa', emoji:'🍓', group:'Frutas', kcal:32, protein:0.7, carbs:7.7, fiber:2.0, fat:0.3 },
-    { id:6, name:'Brócoli', emoji:'🥦', group:'Verduras', kcal:34, protein:2.8, carbs:6.6, fiber:2.6, fat:0.4 },
-    { id:7, name:'Espinaca', emoji:'🍃', group:'Verduras', kcal:23, protein:2.9, carbs:3.6, fiber:2.2, fat:0.4 },
-    { id:8, name:'Zanahoria', emoji:'🥕', group:'Verduras', kcal:41, protein:0.9, carbs:9.6, fiber:2.8, fat:0.2 },
-    { id:9, name:'Jitomate', emoji:'🍅', group:'Verduras', kcal:18, protein:0.9, carbs:3.9, fiber:1.2, fat:0.2 },
-    { id:10, name:'Nopal', emoji:'🌵', group:'Verduras', kcal:16, protein:1.3, carbs:3.3, fiber:2.2, fat:0.1 },
-    { id:11, name:'Avena', emoji:'🌾', group:'Cereales', kcal:379, protein:13.2, carbs:67.7, fiber:10.1, fat:6.5 },
-    { id:12, name:'Tortilla de maíz', emoji:'🫓', group:'Cereales', kcal:218, protein:5.7, carbs:45.9, fiber:6.5, fat:2.9 },
-    { id:13, name:'Arroz blanco', emoji:'🍚', group:'Cereales', kcal:130, protein:2.7, carbs:28.2, fiber:0.4, fat:0.3 },
-    { id:14, name:'Frijoles negros', emoji:'🫘', group:'Leguminosas', kcal:132, protein:8.9, carbs:23.7, fiber:8.7, fat:0.5 },
-    { id:15, name:'Lentejas', emoji:'🫘', group:'Leguminosas', kcal:116, protein:9.0, carbs:20.1, fiber:7.9, fat:0.4 },
-    { id:16, name:'Pechuga de pollo', emoji:'🍗', group:'Carnes', kcal:165, protein:31.0, carbs:0.0, fiber:0.0, fat:3.6 },
-    { id:17, name:'Huevo entero', emoji:'🥚', group:'Carnes', kcal:155, protein:12.6, carbs:1.1, fiber:0.0, fat:10.6 },
-    { id:18, name:'Salmón cocido', emoji:'🐟', group:'Pescados', kcal:206, protein:30.5, carbs:0.0, fiber:0.0, fat:9.0 },
-    { id:19, name:'Almendras', emoji:'🥜', group:'Nueces', kcal:579, protein:21.2, carbs:21.6, fiber:12.5, fat:49.9 },
-    { id:20, name:'Semilla de chía', emoji:'🌱', group:'Semillas', kcal:486, protein:16.5, carbs:42.1, fiber:34.4, fat:30.7 },
-];
+let FOOD_DB = [];
+
+// Función para descargar alimentos reales desde el Backend de Spring Boot
+function inicializarCatalogoBackend() {
+    fetch(API_URL)
+        .then(response => {
+            if (!response.ok) throw new Error('Error al conectar con la base de datos');
+            return response.json();
+        })
+        .then(data => {
+            // Adaptamos las propiedades de tu tabla foods de MySQL a los nombres que usa tu JS actual
+            FOOD_DB = data.map(alimento => ({
+                id: alimento.id,
+                name: alimento.nameEs, // Mapea name_es
+                emoji: alimento.imageUrl || '🍎', // Mapea image_url (tus emojis guardados)
+                group: 'Alimentos', // Agrupador por defecto para el buscador
+                kcal: 52, // Hardcodeo temporal de macros (ya que foods no incluye calorías en su esquema base)
+                protein: 1.2,
+                carbs: 12.0,
+                fat: 0.1,
+                badgeText: alimento.badgeText || 'Verificado',
+                servingDescription: alimento.servingDescription
+            }));
+
+            console.log('Catálogo cargado con éxito desde MySQL:', FOOD_DB);
+            
+            // Forzar renderizado de pantallas que dependen de los datos reales
+            if (document.getElementById('carrusel-recomendados')) {
+                cargarCarruselRecomendados();
+            }
+            filterFoods();
+        })
+        .catch(error => {
+            console.error('Fallo crítico en conexión Front-Back:', error);
+            // Fallback (Resiliencia): Si el back está apagado, dejamos una manzana de contingencia
+            FOOD_DB = [{ id:1, name:'Manzana (Modo Offline)', emoji:'🍎', group:'Frutas', kcal:52, protein:0.3, carbs:13.8, fat:0.2 }];
+            filterFoods();
+        });
+}
 
 const MEAL_ICONS_FA = { Desayuno: 'fa-sun', Almuerzo: 'fa-cloud-sun', Cena: 'fa-moon', Snack: 'fa-apple-whole' };
 let pendingFood = null;
