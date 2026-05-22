@@ -757,3 +757,42 @@ function acceptTermsAndClose() {
     document.getElementById('terms').checked = true;
     closeTermsModal();
 }
+// Modo oscuro
+function toggleDarkMode() {
+    const body = document.body;
+    const icon = document.getElementById('dark-mode-icon');
+    
+    body.classList.toggle('dark-mode');
+    
+    if (body.classList.contains('dark-mode')) {
+        localStorage.setItem('darkMode', 'enabled');
+        icon.classList.remove('fa-moon');
+        icon.classList.add('fa-sun');
+    } else {
+        localStorage.setItem('darkMode', 'disabled');
+        icon.classList.remove('fa-sun');
+        icon.classList.add('fa-moon');
+    }
+}
+
+// Cargar preferencia de modo oscuro al iniciar
+function loadDarkModePreference() {
+    const darkMode = localStorage.getItem('darkMode');
+    const icon = document.getElementById('dark-mode-icon');
+    
+    if (darkMode === 'enabled') {
+        document.body.classList.add('dark-mode');
+        if (icon) {
+            icon.classList.remove('fa-moon');
+            icon.classList.add('fa-sun');
+        }
+    }
+}
+
+// Llamar a esta función cuando se carga la página
+// Agrega esto al final de tu window.onload o al inicio del script
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', loadDarkModePreference);
+} else {
+    loadDarkModePreference();
+}

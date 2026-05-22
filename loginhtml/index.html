@@ -37,7 +37,85 @@
             }
         }
     </script>
-    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        brand: {
+                            green: '#4ade80',
+                            greenDark: '#16a34a',
+                            greenLight: '#dcfce7',
+                            blue: '#bae6fd',
+                            blueLight: '#f0f9ff',
+                            dark: '#1e293b',
+                            gray: '#64748b'
+                        }
+                    },
+                    boxShadow: {
+                        'soft': '0 10px 40px -10px rgba(74, 222, 128, 0.2)',
+                    }
+                }
+            }
+        }
+    </script>
+
+    <!-- ====== PON AQUÍ EL CSS DEL MODO OSCURO ====== -->
+    <style>
+        /* Modo oscuro - estilos globales */
+        body.dark-mode {
+            background-color: #0f172a !important;
+        }
+        body.dark-mode .screen {
+            background-color: #0f172a;
+        }
+        body.dark-mode .bg-white {
+            background-color: #1e293b !important;
+        }
+        body.dark-mode .bg-gray-50 {
+            background-color: #0f172a !important;
+        }
+        body.dark-mode .text-brand-dark {
+            color: #f1f5f9 !important;
+        }
+        body.dark-mode .text-brand-gray {
+            color: #94a3b8 !important;
+        }
+        body.dark-mode .border-gray-100,
+        body.dark-mode .border-gray-200 {
+            border-color: #334155 !important;
+        }
+        body.dark-mode .bg-gray-100 {
+            background-color: #1e293b !important;
+        }
+        body.dark-mode .input-field {
+            background-color: #334155 !important;
+            border-color: #475569 !important;
+            color: #f1f5f9 !important;
+        }
+        body.dark-mode .chip {
+            background-color: #1e293b !important;
+            border-color: #475569 !important;
+            color: #cbd5e1 !important;
+        }
+        body.dark-mode .chip.active {
+            background-color: #16a34a !important;
+            color: white !important;
+        }
+        body.dark-mode .pi-card {
+            background-color: #1e293b !important;
+            border-color: #334155 !important;
+        }
+        body.dark-mode ::placeholder {
+            color: #64748b !important;
+        }
+        body, .screen, .bg-white, .bg-gray-50, .input-field, .chip, .pi-card {
+            transition: background-color 0.3s ease, border-color 0.3s ease, color 0.2s ease;
+        }
+    </style> 
 </head>
 <body>
 
